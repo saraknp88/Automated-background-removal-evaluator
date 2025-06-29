@@ -251,10 +251,12 @@ def submit_responses():
     }
     st.session_state.show_thank_you = True
     
-    # Add balloons celebration
+    # Show balloons after state change
     st.balloons()
-    
+    time.sleep(0.5)  # Brief delay
     st.rerun()
+
+
 
 def start_new_evaluation():
     st.session_state.evaluations = DEMO_RESULTS
