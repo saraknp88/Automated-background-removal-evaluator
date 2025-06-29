@@ -119,40 +119,40 @@ def get_demo_data():
     return [
         {
             'id': 1, 
-            'original': 'images/Before 0.jpg', 
-            'processed': 'images/After 0.png', 
+            'original': 'Before 0.jpg', 
+            'processed': 'After 0.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
             'description': 'Florist portrait - Original vs Background Removed'
         },
         {
             'id': 2, 
-            'original': 'images/Before 01.jpg', 
-            'processed': 'images/After 01.png', 
+            'original': 'Before 01.jpg', 
+            'processed': 'After 01.png', 
             'rating': 3, 
             'quality': 'Moderately Functional',
             'description': 'Professional businesswoman - Background Processing'
         },
         {
             'id': 3, 
-            'original': 'images/Before 02.jpg', 
-            'processed': 'images/After 02.png', 
+            'original': 'Before 02.jpg', 
+            'processed': 'After 02.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
             'description': 'iPhone product photography - Background Removal'
         },
         {
             'id': 4, 
-            'original': 'images/Before 03.jpg', 
-            'processed': 'images/After 03.png', 
+            'original': 'Before 03.jpg', 
+            'processed': 'After 03.png', 
             'rating': 5, 
             'quality': 'Production Ready',
             'description': 'Food photography - Steak meal background processing'
         },
         {
             'id': 5, 
-            'original': 'images/Before 04.jpg', 
-            'processed': 'images/After 04.png', 
+            'original': 'Before 04.jpg', 
+            'processed': 'After 04.png', 
             'rating': 2, 
             'quality': 'Partially Viable',
             'description': 'Bowl splash - Complex liquid motion background removal'
