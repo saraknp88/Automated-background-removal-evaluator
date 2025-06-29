@@ -439,7 +439,7 @@ else:
     with col1:
         st.markdown(f"<h3 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
     with col2:
-        st.markdown(f"<div style='text-align: center; padding-top: 10px;'></div>", unsafe_allow_html=True)
+        st.write("") 
     
     with col2:
         if st.button("🔄 Reset", use_container_width=True):
