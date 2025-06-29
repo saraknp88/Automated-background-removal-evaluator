@@ -226,18 +226,35 @@ st.markdown("""
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.9);
         animation: fadeIn 0.3s;
+        overflow: auto;
     }
     
     .modal-content {
         display: block;
-        margin: auto;
-        max-width: 90%;
+        margin: 50px auto;
+        min-width: 300px;
+        min-height: 300px;
+        max-width: 95%;
         max-height: 90%;
-        margin-top: 2%;
         border-radius: 8px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        cursor: zoom-in;
+        transition: transform 0.3s ease;
+    }
+    
+    .modal-content.zoomed {
+        transform: scale(2);
+        cursor: zoom-out;
+    }
+    
+    .modal-content:hover {
+        transform: scale(1.1);
+    }
+    
+    .modal-content.zoomed:hover {
+        transform: scale(2.2);
     }
     
     .close {
@@ -249,10 +266,12 @@ st.markdown("""
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
+        z-index: 1001;
     }
     
     .close:hover {
         color: #ccc;
+        transform: scale(1.2);
     }
     
     @keyframes fadeIn {
@@ -266,6 +285,22 @@ st.markdown("""
         color: white;
         padding: 10px 0;
         font-size: 16px;
+        margin-top: 10px;
+    }
+    
+    /* Zoom instructions */
+    .zoom-instructions {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        opacity: 0.8;
+        transition: opacity 0.3s;
     }
 </style>
 
@@ -274,6 +309,7 @@ st.markdown("""
     <span class="close">&times;</span>
     <img class="modal-content" id="modalImage">
     <div class="modal-caption" id="modalCaption"></div>
+    <div class="zoom-instructions">Click image to zoom • Scroll to zoom • Click outside to close</div>
 </div>
 
 <script>
@@ -283,13 +319,59 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalImg = document.getElementById('modalImage');
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementsByClassName('close')[0];
+    const zoomInstructions = document.querySelector('.zoom-instructions');
+    
+    let isZoomed = false;
+    let scale = 1;
     
     // Function to open modal
     window.openImageModal = function(src, caption) {
         modal.style.display = 'block';
         modalImg.src = src;
         modalCaption.innerHTML = caption;
+        isZoomed = false;
+        scale = 1;
+        modalImg.classList.remove('zoomed');
+        modalImg.style.transform = 'scale(1)';
+        
+        // Show zoom instructions briefly
+        zoomInstructions.style.opacity = '1';
+        setTimeout(() => {
+            zoomInstructions.style.opacity = '0.8';
+        }, 3000);
     }
+    
+    // Click to zoom functionality
+    modalImg.onclick = function(event) {
+        event.stopPropagation();
+        if (!isZoomed) {
+            scale = 2;
+            modalImg.classList.add('zoomed');
+            modalImg.style.transform = 'scale(' + scale + ')';
+            isZoomed = true;
+        } else {
+            scale = 1;
+            modalImg.classList.remove('zoomed');
+            modalImg.style.transform = 'scale(1)';
+            isZoomed = false;
+        }
+    }
+    
+    // Scroll to zoom functionality
+    modalImg.addEventListener('wheel', function(event) {
+        event.preventDefault();
+        const delta = event.deltaY > 0 ? -0.1 : 0.1;
+        scale = Math.min(Math.max(0.5, scale + delta), 4);
+        modalImg.style.transform = 'scale(' + scale + ')';
+        
+        if (scale > 1) {
+            modalImg.classList.add('zoomed');
+            isZoomed = true;
+        } else {
+            modalImg.classList.remove('zoomed');
+            isZoomed = false;
+        }
+    });
     
     // Close modal when clicking the X
     if (closeBtn) {
@@ -311,6 +393,11 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     }
+    
+    // Prevent modal from closing when clicking on image
+    modalImg.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
 });
 </script>
 """, unsafe_allow_html=True)
@@ -557,7 +644,7 @@ else:
     st.markdown("""
     <div class="instructions-box">
         <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
-        <strong>💡 Tip:</strong> Hover over images to see a preview magnification, or click on any image to view it in full size for detailed inspection.<br><br>
+        <strong>💡 Tip:</strong> Hover over images to see a preview magnification, or click on any image to view it full screen. In the modal, click the image again to zoom 2x, use mouse wheel to zoom up to 4x, or click outside to close.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
         <strong>3 - Moderately Functional:</strong> Largely usable, with moderate fixes needed. More efficient than starting from scratch.<br>
