@@ -235,7 +235,13 @@ def get_quality_color(rating: int) -> str:
     return colors.get(rating, '#6b7280')
 
 def submit_responses():
-    # Your existing code...
+    feedback_count = len(st.session_state.human_feedback)
+    agreement_count = sum(1 for f in st.session_state.human_feedback.values() if f)
+    disagreement_count = feedback_count - agreement_count
+    
+    agreement_rate = (agreement_count / feedback_count * 100) if feedback_count > 0 else 0
+    disagreement_rate = (disagreement_count / feedback_count * 100) if feedback_count > 0 else 0
+    
     st.session_state.analysis_results = {
         'agreement_rate': round(agreement_rate, 1),
         'disagreement_rate': round(disagreement_rate, 1),
