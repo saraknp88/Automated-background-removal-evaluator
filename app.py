@@ -398,7 +398,7 @@ else:
     if st.session_state.evaluations:
         col1, col2 = st.columns([3, 1])
         with col1:
-            st.markdown("## Validate AI Ratings")
+            st.markdown("## Validate AI feedback through upvote/downvote ratings")
         with col2:
             if st.button("🔄 Reset", use_container_width=True):
                 start_new_evaluation()
