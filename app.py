@@ -1,4 +1,4 @@
-import streamlit as st
+=import streamlit as st
 import time
 from typing import Dict, Any
 
@@ -145,6 +145,23 @@ st.markdown("""
         border-radius: 1rem;
         color: white;
         margin: 2rem 0;
+    }
+    
+    .instructions-box {
+        background-color: #f8fafc;
+        border-left: 4px solid #3b82f6;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .instructions-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -377,19 +394,11 @@ elif st.session_state.show_thank_you:
 # Main Application - Validate AI Ratings (Landing Page)
 else:
     # Header
-    st.markdown("""
-    <div class="main-header">
-        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-            <span class="brain-icon">🧠</span>
-            <h1 class="main-title">Sara's AI Evaluation Validator</h1>
-        </div>
-        <p class="subtitle">Validate AI background removal ratings with thumbs up/down feedback</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<h1 class="instructions-title">Sara\'s Enterprise Background Removal Evaluator</h1>', unsafe_allow_html=True)
     
     # Instructions
     st.markdown("""
-    <div class="criteria-list">
+    <div class="instructions-box">
         <strong>Assess AI-generated background removal results for production readiness. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
