@@ -201,16 +201,12 @@ def render_evaluation_preview():
     
     for i, pair in enumerate(demo_data):
         with st.container():
-            col1, col2, col3 = st.columns([2, 1, 2])
+            col1, col3 = st.columns([2, 2])
             
             with col1:
                 st.markdown("**Original**")
                 img = load_image_with_fallback(pair['original'], 150, 120)
                 st.image(img, caption=pair['original'], width=150)
-            
-            with col2:
-                st.markdown("<div style='text-align: center; padding-top: 50px;'>→</div>", 
-                          unsafe_allow_html=True)
             
             with col3:
                 st.markdown("**Processed**")
