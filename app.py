@@ -281,7 +281,27 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     results = st.session_state.analysis_results
     
     # Executive Summary
+
+col1, col2, col3 = st.columns([6, 1, 3]) 
+
+with col1:
     st.markdown("### Executive Summary")
+
+with col3:
+    if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+        start_new_evaluation()
+        st.rerun()
+
+    
+   # st.markdown("### Executive Summary")
+
+      # Action buttons
+   # col1, col2, col3 = st.columns(3)
+   # 
+   # with col3:
+     #   if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+      #      start_new_evaluation()
+       #     st.rerun()
     
     # Analyze disagreements for enhanced summary
     disagreements = [(eval_id, feedback) for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
