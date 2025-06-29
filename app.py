@@ -449,14 +449,6 @@ def render_thank_you_page():
     </div>
     """, unsafe_allow_html=True)
     
-    # Clean button section
-    st.markdown("""
-    <div class="submit-button-section">
-        <h4 style="margin-bottom: 1rem; color: #667eea;">What's Next?</h4>
-        <p style="margin-bottom: 1rem; color: #6c757d;">View your analysis or start a new evaluation</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
     col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
     
     with col4:
