@@ -363,16 +363,13 @@ else:
         
         for i, pair in enumerate(DEMO_RESULTS):
             st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-            col1, col2, col3, col4 = st.columns([2, 1, 2, 3])
+            col1, col2, col3 = st.columns([2, 2, 3])
             
             with col1:
                 st.markdown("**Original**")
                 st.image(pair['original'], width=200)
             
             with col2:
-                st.markdown("<div style='text-align: center; padding-top: 50px; font-size: 2rem; color: #6b7280;'>→</div>", unsafe_allow_html=True)
-            
-            with col3:
                 st.markdown("**Processed**")
                 st.image(pair['processed'], width=200)
             
