@@ -201,7 +201,7 @@ def render_evaluation_preview():
     
     for i, pair in enumerate(demo_data):
         with st.container():
-            col1, col2, col3, col4 = st.columns([2, 1, 2, 3])
+            col1, col2, col3 = st.columns([2, 1, 2])
             
             with col1:
                 st.markdown("**Original**")
@@ -216,10 +216,6 @@ def render_evaluation_preview():
                 st.markdown("**Processed**")
                 img = load_image_with_fallback(pair['processed'], 150, 120)
                 st.image(img, caption=pair['processed'], width=150)
-            
-            with col4:
-                st.markdown(f"**Description:** {pair['description']}")
-                st.markdown(f"**File:** `{pair['original']}`")
         
         if i < len(demo_data) - 1:
             st.divider()
