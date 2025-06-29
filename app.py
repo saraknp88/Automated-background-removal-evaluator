@@ -641,7 +641,7 @@ else:
             
             submit_help = "Complete all required ratings before submitting" if not all_images_complete else "Submit all responses"
             
-            if st.button("Submit", type="primary", disabled=not all_images_complete, help=submit_help, use_container_width=True):
+            if st.button("✨Submit", type="primary", disabled=not all_images_complete, help=submit_help, use_container_width=True):
                 submit_responses()
     
     # Show appropriate feedback message
