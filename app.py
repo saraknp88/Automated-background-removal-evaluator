@@ -5,7 +5,7 @@ from typing import Dict, Any
 # Page config
 st.set_page_config(
     page_title="Sara's AI Evaluation Validator",
-    page_icon="🧠",
+    page_icon="✨",
     layout="wide"
 )
 
@@ -394,7 +394,7 @@ elif st.session_state.show_thank_you:
 # Main Application - Validate AI Ratings (Landing Page)
 else:
     # Header
-    st.markdown('<h1 class="instructions-title">Sara\'s Enterprise Background Removal Evaluator</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="instructions-title">Sara’s AI Judge for Background Removal</h1>', unsafe_allow_html=True)
     
     # Instructions
     st.markdown("""
