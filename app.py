@@ -282,8 +282,16 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     
     results = st.session_state.analysis_results
     
-    # Executive Summary
-    st.markdown("### Executive Summary")
+        # Executive Summary
+    col1, col2, col3 = st.columns([1, 3, 1]) 
+
+    with col1:
+      st.markdown("### Executive Summary")
+
+    with col3:
+      if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+         start_new_evaluation()
+         st.rerun()
     
     # Analyze disagreements for enhanced summary
     disagreements = [(eval_id, feedback) for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
@@ -382,14 +390,6 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             st.markdown("Recalibrate scoring weights and evaluation criteria using collected human feedback data.")
         
         st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Action buttons
-    col1, col2 = st.columns(2)
-    
-    with col2:
-        if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
-            start_new_evaluation()
-            st.rerun()
 
 # Thank You Page
 elif st.session_state.show_thank_you:
