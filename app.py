@@ -389,7 +389,7 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     col1, col2 = st.columns(2)
     
     with col2:
-        if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+        if st.button("🔄 Start New Evaluation", use_container_width=True):
             start_new_evaluation()
             st.rerun()
 
