@@ -437,10 +437,12 @@ else:
     # Top navigation bar
     col1, col2 = st.columns([1, 3])
     with col1:
+        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+    
+    with col2:
         if st.button("🔄 Reset", use_container_width=True):
             start_new_evaluation()
-    with col2:
-        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+
     
     st.markdown("---")
     
