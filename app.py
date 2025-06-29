@@ -380,14 +380,6 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             st.markdown("Recalibrate scoring weights and evaluation criteria using collected human feedback data.")
         
         st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Action buttons
-    col1, col2, col3 = st.columns(3)
-    
-    with col3:
-        if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
-            start_new_evaluation()
-            st.rerun()
 
 # Thank You Page
 elif st.session_state.show_thank_you:
