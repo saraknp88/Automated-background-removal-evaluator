@@ -537,7 +537,7 @@ else:
                 st.rerun()
     
     with col6:
-        st.markdown("**Annotator Rating**")
+        st.markdown('<span style="color: #3b82f6; font-weight: bold;">Annotator Rating</span>', unsafe_allow_html=True)
         if st.session_state.human_feedback.get(eval_id) is False:
             rating = st.selectbox(
                 "Rate*", 
