@@ -71,6 +71,24 @@ st.markdown("""
         border-radius: 8px;
         padding: 0.5rem 1rem;
         font-weight: bold;
+        width: 100%;
+        margin: 0.25rem 0;
+    }
+    
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .submit-button-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
     }
     
     .feedback-button {
@@ -101,40 +119,40 @@ def get_demo_data():
     return [
         {
             'id': 1, 
-            'original': 'images/Image 1.png', 
-            'processed': 'images/Image 4.png', 
+            'original': 'images/Before 0.jpg', 
+            'processed': 'images/After 0.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
             'description': 'Florist portrait - Original vs Background Removed'
         },
         {
             'id': 2, 
-            'original': 'images/Image 3.png', 
-            'processed': 'images/Image 2.png', 
+            'original': 'images/Before 01.jpg', 
+            'processed': 'images/After 01.png', 
             'rating': 3, 
             'quality': 'Moderately Functional',
             'description': 'Professional businesswoman - Background Processing'
         },
         {
             'id': 3, 
-            'original': 'images/Image 5.png', 
-            'processed': 'images/Image 6.png', 
+            'original': 'images/Before 02.jpg', 
+            'processed': 'images/After 02.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
             'description': 'iPhone product photography - Background Removal'
         },
         {
             'id': 4, 
-            'original': 'images/Image 8.png', 
-            'processed': 'images/Image 7.png', 
+            'original': 'images/Before 03.jpg', 
+            'processed': 'images/After 03.png', 
             'rating': 5, 
             'quality': 'Production Ready',
             'description': 'Food photography - Steak meal background processing'
         },
         {
             'id': 5, 
-            'original': 'images/Image 10.png', 
-            'processed': 'images/Image 9.png', 
+            'original': 'images/Before 04.jpg', 
+            'processed': 'images/After 04.png', 
             'rating': 2, 
             'quality': 'Partially Viable',
             'description': 'Bowl splash - Complex liquid motion background removal'
@@ -287,7 +305,7 @@ def render_validation_interface():
             st.session_state.current_page = 'main'
             st.rerun()
     
-    # Top submit button for easier access (right side)
+    # Top submit button for easier access (right side with better alignment)
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -296,12 +314,20 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        col1, col2, col3 = st.columns([1, 1, 2])
-        with col3:
+        # Create a clean submit section at the top
+        st.markdown("""
+        <div class="submit-button-section">
+            <h4 style="margin-bottom: 1rem; color: #667eea;">Submit Your Evaluation</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+        with col4:
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
             
-            if st.button("🎉 Submit Responses (Top)", disabled=not can_submit, key="submit_btn_top"):
+            if st.button("🎉 Submit Responses", disabled=not can_submit, key="submit_btn_top", 
+                        help="Submit all your feedback and ratings"):
                 if can_submit:
                     calculate_analysis()
                     show_celebration()
@@ -355,7 +381,7 @@ def render_validation_interface():
             
             st.divider()
     
-    # Bottom submit button (right side)
+    # Bottom submit button (right side with better alignment)
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -364,12 +390,25 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        col1, col2, col3 = st.columns([1, 1, 2])
-        with col3:
+        # Create a clean submit section at the bottom
+        st.markdown("---")
+        st.markdown("""
+        <div class="submit-button-section">
+            <h4 style="margin-bottom: 1rem; color: #667eea;">Complete Your Evaluation</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+        with col4:
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
             
-            if st.button("🎉 Submit Responses", disabled=not can_submit, key="submit_btn_bottom"):
+            # Show validation summary
+            total_feedback = len(st.session_state.human_feedback)
+            st.info(f"✅ Completed: {total_feedback}/5 evaluations")
+            
+            if st.button("🎉 Submit All Responses", disabled=not can_submit, key="submit_btn_bottom",
+                        help="Final submission of all feedback and ratings"):
                 if can_submit:
                     calculate_analysis()
                     show_celebration()
@@ -424,16 +463,24 @@ def render_thank_you_page():
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 1, 2])
+    # Clean button section
+    st.markdown("""
+    <div class="submit-button-section">
+        <h4 style="margin-bottom: 1rem; color: #667eea;">What's Next?</h4>
+        <p style="margin-bottom: 1rem; color: #6c757d;">View your analysis or start a new evaluation</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    with col3:
-        if st.button("📊 View Analysis", key="view_analysis"):
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+    
+    with col4:
+        if st.button("📊 View Analysis", key="view_analysis",
+                    help="See detailed analysis of your feedback"):
             st.session_state.current_page = 'analysis'
             st.rerun()
         
-        st.write("")  # Add some spacing
-        
-        if st.button("🔄 Start New Evaluation", key="new_evaluation"):
+        if st.button("🔄 Start New Evaluation", key="new_evaluation",
+                    help="Begin a fresh evaluation session"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
                        'analysis_results', 'evaluation_complete', 'celebration_shown']:
                 if key in st.session_state:
@@ -623,9 +670,19 @@ def main():
         if not st.session_state.evaluation_complete:
             render_evaluation_preview()
             
-            col1, col2, col3 = st.columns([1, 1, 2])
-            with col3:
-                if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval"):
+            # Create a clean start section
+            st.markdown("---")
+            st.markdown("""
+            <div class="submit-button-section">
+                <h4 style="margin-bottom: 1rem; color: #667eea;">Ready to Begin?</h4>
+                <p style="margin-bottom: 1rem; color: #6c757d;">Click below to start the AI evaluation process</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+            with col4:
+                if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval",
+                            help="Begin the automated evaluation process"):
                     simulate_ai_evaluation()
         else:
             render_validation_interface()
