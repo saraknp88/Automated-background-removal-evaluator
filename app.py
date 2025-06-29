@@ -8,6 +8,7 @@ import time
 from PIL import Image
 import io
 import base64
+import os
 
 # Page configuration
 st.set_page_config(
@@ -94,48 +95,48 @@ def initialize_session_state():
         if key not in st.session_state:
             st.session_state[key] = default_value
 
-# Demo data
+# Demo data with actual image paths
 def get_demo_data():
     return [
         {
             'id': 1, 
-            'original': 'florist-original.jpg', 
-            'processed': 'florist-processed.jpg', 
+            'original': 'images/Image 1.png', 
+            'processed': 'images/Image 4.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
-            'description': 'Portrait with natural background'
+            'description': 'Florist portrait - Original vs Background Removed'
         },
         {
             'id': 2, 
-            'original': 'businesswoman-original.jpg', 
-            'processed': 'businesswoman-processed.jpg', 
+            'original': 'images/Image 3.png', 
+            'processed': 'images/Image 2.png', 
             'rating': 3, 
             'quality': 'Moderately Functional',
-            'description': 'Professional headshot'
+            'description': 'Professional businesswoman - Background Processing'
         },
         {
             'id': 3, 
-            'original': 'iphone-original.jpg', 
-            'processed': 'iphone-processed.jpg', 
+            'original': 'images/Image 5.png', 
+            'processed': 'images/Image 6.png', 
             'rating': 4, 
             'quality': 'Near Production Ready',
-            'description': 'Product photography'
+            'description': 'iPhone product photography - Background Removal'
         },
         {
             'id': 4, 
-            'original': 'steak-meal.jpg', 
-            'processed': 'steak-meal-processed.jpg', 
+            'original': 'images/Image 8.png', 
+            'processed': 'images/Image 7.png', 
             'rating': 5, 
             'quality': 'Production Ready',
-            'description': 'Food photography'
+            'description': 'Food photography - Steak meal background processing'
         },
         {
             'id': 5, 
-            'original': 'bowl-splash.jpg', 
-            'processed': 'bowl-splash-processed.jpg', 
+            'original': 'images/Image 10.png', 
+            'processed': 'images/Image 9.png', 
             'rating': 2, 
             'quality': 'Partially Viable',
-            'description': 'Action shot with water'
+            'description': 'Bowl splash - Complex liquid motion background removal'
         }
     ]
 
@@ -144,9 +145,23 @@ def get_quality_color(rating):
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
 
-# Create placeholder image
+# Load image with fallback to placeholder
+def load_image_with_fallback(image_path, width=200, height=150):
+    try:
+        # Try to load the actual image
+        if os.path.exists(image_path):
+            return Image.open(image_path)
+        else:
+            # If file doesn't exist, create placeholder
+            return create_placeholder_image(width, height, os.path.basename(image_path))
+    except Exception as e:
+        # If any error occurs, create placeholder
+        return create_placeholder_image(width, height, f"Error: {os.path.basename(image_path)}")
+
+# Create placeholder image with filename
 def create_placeholder_image(width=200, height=150, text="Demo Image"):
     img = Image.new('RGB', (width, height), color='lightgray')
+    # You could add text to the image here if needed
     return img
 
 # Main header
@@ -171,7 +186,7 @@ def render_evaluation_preview():
             
             with col1:
                 st.markdown("**Original**")
-                img = create_placeholder_image()
+                img = load_image_with_fallback(pair['original'], 150, 120)
                 st.image(img, caption=pair['original'], width=150)
             
             with col2:
@@ -180,7 +195,7 @@ def render_evaluation_preview():
             
             with col3:
                 st.markdown("**Processed**")
-                img = create_placeholder_image()
+                img = load_image_with_fallback(pair['processed'], 150, 120)
                 st.image(img, caption=pair['processed'], width=150)
             
             with col4:
@@ -271,26 +286,43 @@ def render_validation_interface():
             st.session_state.current_page = 'main'
             st.rerun()
     
+    # Top submit button for easier access
+    if st.session_state.human_feedback:
+        thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
+                           if feedback == False]
+        missing_ratings = [id for id in thumbs_down_items 
+                         if id not in st.session_state.annotator_ratings]
+        
+        can_submit = len(missing_ratings) == 0
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            if not can_submit:
+                st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
+            
+            if st.button("🎉 Submit Responses (Top)", disabled=not can_submit, key="submit_btn_top"):
+                if can_submit:
+                    calculate_analysis()
+                    show_celebration()
+                    st.session_state.current_page = 'thank_you'
+                    st.rerun()
+    
+    st.divider()
+    
     # Create evaluation table
     for eval_data in st.session_state.evaluations:
         with st.container():
-            st.markdown(f"""
-            <div class="evaluation-card">
-                <h4>Image Pair {eval_data['id']}</h4>
-            </div>
-            """, unsafe_allow_html=True)
-            
             col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
             
             with col1:
                 st.markdown("**Original**")
-                img = create_placeholder_image(150, 120)
+                img = load_image_with_fallback(eval_data['original'], 150, 120)
                 st.image(img, width=120)
                 st.caption(eval_data['original'])
             
             with col2:
                 st.markdown("**Processed**")
-                img = create_placeholder_image(150, 120)
+                img = load_image_with_fallback(eval_data['processed'], 150, 120)
                 st.image(img, width=120)
                 st.caption(eval_data['processed'])
             
@@ -322,7 +354,7 @@ def render_validation_interface():
             
             st.divider()
     
-    # Submit button
+    # Bottom submit button
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -331,15 +363,17 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        if not can_submit:
-            st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
-        
-        if st.button("🎉 Submit Responses", disabled=not can_submit, key="submit_btn"):
-            if can_submit:
-                calculate_analysis()
-                show_celebration()
-                st.session_state.current_page = 'thank_you'
-                st.rerun()
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            if not can_submit:
+                st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
+            
+            if st.button("🎉 Submit Responses", disabled=not can_submit, key="submit_btn_bottom"):
+                if can_submit:
+                    calculate_analysis()
+                    show_celebration()
+                    st.session_state.current_page = 'thank_you'
+                    st.rerun()
 
 # Celebration animation
 def show_celebration():
@@ -389,13 +423,14 @@ def render_thank_you_page():
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
     
-    with col2:
+    with col1:
         if st.button("📊 View Analysis", key="view_analysis"):
             st.session_state.current_page = 'analysis'
             st.rerun()
-        
+    
+    with col2:
         if st.button("🔄 Start New Evaluation", key="new_evaluation"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
                        'analysis_results', 'evaluation_complete']:
@@ -480,29 +515,36 @@ def render_analysis_dashboard():
     col1, col2 = st.columns(2)
     
     with col1:
-        # Agreement pie chart
-        fig_pie = px.pie(
-            values=[results['agreement_count'], results['disagreement_count']],
-            names=['Agreement', 'Disagreement'],
-            colors=['#10b981', '#ef4444'],
-            title="Human-AI Agreement Distribution"
-        )
-        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig_pie, use_container_width=True)
+        # Agreement pie chart - only show if there's data
+        if results['feedback_count'] > 0:
+            fig_pie = px.pie(
+                values=[results['agreement_count'], results['disagreement_count']],
+                names=['Agreement', 'Disagreement'],
+                colors=['#10b981', '#ef4444'],
+                title="Human-AI Agreement Distribution"
+            )
+            fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+            st.plotly_chart(fig_pie, use_container_width=True)
+        else:
+            st.info("No feedback data available for pie chart")
     
     with col2:
         # Rating distribution
-        evaluations_df = pd.DataFrame(st.session_state.evaluations)
-        fig_bar = px.bar(
-            evaluations_df.groupby('rating').size().reset_index(name='count'),
-            x='rating',
-            y='count',
-            color='rating',
-            title="AI Rating Distribution",
-            labels={'rating': 'AI Rating', 'count': 'Number of Images'},
-            color_continuous_scale='viridis'
-        )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        if st.session_state.evaluations:
+            evaluations_df = pd.DataFrame(st.session_state.evaluations)
+            rating_counts = evaluations_df.groupby('rating').size().reset_index(name='count')
+            fig_bar = px.bar(
+                rating_counts,
+                x='rating',
+                y='count',
+                color='rating',
+                title="AI Rating Distribution",
+                labels={'rating': 'AI Rating', 'count': 'Number of Images'},
+                color_continuous_scale='viridis'
+            )
+            st.plotly_chart(fig_bar, use_container_width=True)
+        else:
+            st.info("No evaluation data available for bar chart")
     
     # Detailed Analysis
     if results['disagreement_count'] > 0:
@@ -579,8 +621,8 @@ def main():
         if not st.session_state.evaluation_complete:
             render_evaluation_preview()
             
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
+            col1, col2, col3 = st.columns([2, 1, 1])
+            with col1:
                 if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval"):
                     simulate_ai_evaluation()
         else:
