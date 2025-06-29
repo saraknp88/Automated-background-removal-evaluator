@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 import time
 from typing import Dict, Any
@@ -283,27 +281,7 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     results = st.session_state.analysis_results
     
     # Executive Summary
-    col1, col2, col3 = st.columns([1, 3, 1]) 
-
-    with col1:
-      st.markdown("### Executive Summary")
-
-    with col3:
-      if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
-         start_new_evaluation()
-         st.rerun()
-
-
-    
-   # st.markdown("### Executive Summary")
-
-      # Action buttons
-   # col1, col2, col3 = st.columns(3)
-   # 
-   # with col3:
-     #   if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
-      #      start_new_evaluation()
-       #     st.rerun()
+    st.markdown("### Executive Summary")
     
     # Analyze disagreements for enhanced summary
     disagreements = [(eval_id, feedback) for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
@@ -402,26 +380,52 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             st.markdown("Recalibrate scoring weights and evaluation criteria using collected human feedback data.")
         
         st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Action buttons
+    col1, col2 = st.columns(2)
+    
+    with col2:
+        if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+            start_new_evaluation()
+            st.rerun()
 
 # Thank You Page
 elif st.session_state.show_thank_you:
-    st.markdown('<div class="thank-you-container">', unsafe_allow_html=True)
-    st.markdown('<div class="success-icon">✓</div>', unsafe_allow_html=True)
-    st.markdown("# Thank you for your participation!")
-    st.markdown("### Your responses have been recorded successfully.")
+    # Custom celebration banner
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        margin: 2rem 0;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    ">
+        <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold;">
+            🎉 Evaluation Complete! 🎉
+        </h1>
+        <h2 style="margin: 1rem 0 0.5rem 0; font-size: 1.5rem; font-weight: normal;">
+            Thank you for your participation!
+        </h2>
+        <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.9;">
+            Your responses have been recorded successfully.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 2, 1])
+    # Action buttons
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("📊 View Analysis", type="primary", use_container_width=True):
+            st.session_state.show_thank_you = False
+            st.session_state.show_analysis = True
+            st.rerun()
+    
     with col2:
-        col_a, col_b = st.columns(2)
-        with col_a:
-            if st.button("📊 View Analysis", type="primary", use_container_width=True):
-                st.session_state.show_thank_you = False
-                st.session_state.show_analysis = True
-                st.rerun()
-        with col_b:
-            if st.button("🔄 Start New Evaluation", use_container_width=True):
-                start_new_evaluation()
-    st.markdown('</div>', unsafe_allow_html=True)
+        if st.button("🔄 Start New Evaluation", use_container_width=True):
+            start_new_evaluation()
 
 # Main Application - Single Image View
 else:
@@ -451,18 +455,15 @@ else:
     # Top navigation bar
     col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        st.markdown(f"<h4 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h4>", unsafe_allow_html=True)
-    with col2:
-        st.write("") 
-    
-    with col3:
         if st.button("🔄 Reset", use_container_width=True):
             start_new_evaluation()
-
+    with col2:
+        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+    with col3:
+        st.markdown(f"<div style='text-align: center; padding-top: 10px;'><strong>{validated_count}/{total_images} validated</strong></div>", unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Single image evaluation interface
     # Single image evaluation interface
     col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
     
@@ -515,7 +516,7 @@ else:
         st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
     
     with col5:
-        st.markdown('<span style="color: #3b82f6; font-weight: bold;">Annotator Feedback</span>', unsafe_allow_html=True)
+        st.markdown("**Annotator Feedback**")
         col_up, col_down = st.columns(2)
         
         with col_up:
@@ -537,7 +538,7 @@ else:
                 st.rerun()
     
     with col6:
-        st.markdown('<span style="color: #3b82f6; font-weight: bold;">Annotator Rating</span>', unsafe_allow_html=True)
+        st.markdown("**Annotator Rating**")
         if st.session_state.human_feedback.get(eval_id) is False:
             rating = st.selectbox(
                 "Rate*", 
@@ -552,7 +553,7 @@ else:
             st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
         else:
             st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
-        
+    
     # Show modals if triggered
     if st.session_state.get(f'show_modal_{eval_id}_orig', False):
         with st.container():
@@ -598,10 +599,10 @@ else:
     with col2:
         st.write("")  # Empty space
     
-    #with col3:
+    with col3:
         # Progress bar in center
-      #  progress = current_position / total_images
-      #  st.progress(progress, text=f"Progress: {current_position}/{total_images}")
+        progress = current_position / total_images
+        st.progress(progress, text=f"Progress: {current_position}/{total_images}")
     
     with col4:
         st.write("")  # Empty space
@@ -612,7 +613,7 @@ else:
             next_disabled = not current_has_feedback
             next_help = "Please provide feedback (👍 or 👎) before proceeding" if next_disabled else "Go to next image"
             
-            if st.button("Next →", disabled=next_disabled, type="primary", help=next_help, use_container_width=True):    
+            if st.button("Next →", disabled=next_disabled, help=next_help, use_container_width=True):
                 next_image()
         else:
             # Submit button on last image - also requires feedback
@@ -622,7 +623,7 @@ else:
             
             submit_help = "All images must have feedback before submitting" if not can_submit else "Submit all responses"
             
-            if st.button("✨ Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
+            if st.button("Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
                 submit_responses()
     
     # Show feedback requirement message if no feedback provided
