@@ -653,13 +653,18 @@ def main():
     # Navigation logic
     if st.session_state.current_page == 'main':
         if not st.session_state.evaluation_complete:
-            render_evaluation_preview()
-            
+            # Move the start button to the top, before the preview
             col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
             with col4:
                 if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval",
                             help="Begin the automated evaluation process"):
                     simulate_ai_evaluation()
+            
+            # Add some spacing
+            st.markdown("---")
+            
+            # Now show the preview
+            render_evaluation_preview()
         else:
             render_validation_interface()
     
