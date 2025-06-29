@@ -515,7 +515,7 @@ else:
         st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
     
     with col5:
-        st.markdown("**Annotator Feedback**")
+        st.markdown('<span style="color: #3b82f6; font-weight: bold;">Annotator Feedback</span>', unsafe_allow_html=True)
         col_up, col_down = st.columns(2)
         
         with col_up:
