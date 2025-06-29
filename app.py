@@ -624,9 +624,7 @@ with col2:
     st.write("")  # Empty space
 
 with col3:
-    # Progress bar in center
-    progress = current_position / total_images
-    st.progress(progress, text=f"Progress: {current_position}/{total_images}")
+     st.write("")  # Empty space
 
 with col4:
     st.write("")  # Empty space
