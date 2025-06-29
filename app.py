@@ -326,7 +326,7 @@ def render_validation_interface():
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
             
-            if st.button("🎉 Submit Responses", disabled=not can_submit, key="submit_btn_top", 
+            if st.button("✨ Submit Responses", disabled=not can_submit, key="submit_btn_top", 
                         help="Submit all your feedback and ratings"):
                 if can_submit:
                     calculate_analysis()
