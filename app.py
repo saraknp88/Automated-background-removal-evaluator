@@ -512,10 +512,10 @@ else:
     with col4:
         st.markdown("**Quality Level**")
         st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
-    
+
     with col5:
-        st.markdown("**Annotator Feedback**")
-        col_up, col_down = st.columns(2)
+       st.markdown("<span style='color: #2563eb; font-weight: 600;'>Annotator Feedback</span>", unsafe_allow_html=True)
+       col_up, col_down = st.columns(2)
         
         with col_up:
             thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
