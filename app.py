@@ -510,10 +510,10 @@ else:
         """, unsafe_allow_html=True)
     
     with col4:
-        st.markdown("**Quality Level**")
-        st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
+         st.markdown("**Quality Level**")
+         st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
 
-   with col5:
+    with col5:
        st.markdown("<span style='color: #2563eb; font-weight: 600;'>Annotator Feedback</span>", unsafe_allow_html=True)
        col_up, col_down = st.columns(2)
         
