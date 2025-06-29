@@ -442,7 +442,7 @@ else:
     # Instructions
     st.markdown("""
     <div class="instructions-box">
-        <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
+        <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images.</strong><br><br>
         <strong>💡 Tip:</strong> Click the 🔍 button next to each image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
@@ -625,7 +625,7 @@ else:
             else:
                 next_help = "Go to next image"
             
-            if st.button("Next →", disabled=not can_proceed, help=next_help, use_container_width=True):
+            if st.button("Next →", disabled=not can_proceed, help=next_help,type="primary", use_container_width=True):
                 next_image()
         else:
             # Submit button logic - check all images have required feedback/ratings
