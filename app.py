@@ -453,7 +453,7 @@ else:
     # Instructions
     st.markdown("""
     <div class="instructions-box">
-        <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
+        <strong>Hello! I'm Sara's AI Judge for Background Removal. I use the evaluation rubric below to assess the quality of background-removed images. As you review the automated ratings, please apply the same criteria.</strong><br><br>
         <strong>💡 Tip:</strong> Click the 🔍 button next to each image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
