@@ -13,8 +13,18 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
         text-align: center;
-        padding: 2rem 0;
+    }
+    
+    .sub-header {
+        font-size: 1.2rem;
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        text-align: center;
     }
     
     .brain-icon {
@@ -71,9 +81,12 @@ st.markdown("""
     }
     
     .metric-card {
-        text-align: center;
+        background: white;
         padding: 1.5rem;
         border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        text-align: center;
         margin: 0.5rem;
     }
     
@@ -124,6 +137,15 @@ st.markdown("""
         font-size: 2.5rem;
         color: #16a34a;
     }
+    
+    .celebration {
+        text-align: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 1rem;
+        color: white;
+        margin: 2rem 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -147,36 +169,36 @@ if 'is_evaluating' not in st.session_state:
 DEMO_RESULTS = [
     {
         'id': 1, 
-        'original': 'Before 0.jpg',
-        'processed': 'After 0.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%200.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%200.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 2, 
-        'original': 'Before 01.jpg',
-        'processed': 'After 01.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2001.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2001.png',
         'rating': 3, 
         'quality': 'Moderately Functional'
     },
     {
         'id': 3, 
-        'original': 'Before 02.jpg',
-        'processed': 'After 02.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2002.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2002.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 4, 
-        'original': 'Before 03.jpg',
-        'processed': 'After 03.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2003.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2003.png',
         'rating': 5, 
         'quality': 'Production Ready'
     },
     {
         'id': 5, 
-        'original': 'Before 04.jpg',
-        'processed': 'After 04.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2004.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2004.png',
         'rating': 2, 
         'quality': 'Partially Viable'
     }
@@ -223,50 +245,16 @@ def start_new_evaluation():
 
 # Analysis Results Page
 if st.session_state.show_analysis and st.session_state.analysis_results:
-    col1, col2 = st.columns([4, 1])
-    
-    with col1:
-        st.markdown("# Analysis Results")
-        st.markdown("### Human validation feedback analysis")
-    
-    with col2:
-        if st.button("🔄 Start New Evaluation", type="primary"):
-            start_new_evaluation()
-    
-    # Executive Summary
-    st.markdown('<div class="analysis-summary">', unsafe_allow_html=True)
-    st.markdown("## Executive Summary")
+    # Header with consistent styling
+    st.markdown('<h1 class="main-header">Human-AI Validation Analysis</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Performance evaluation dashboard</p>', unsafe_allow_html=True)
     
     results = st.session_state.analysis_results
-    st.markdown(f"""
-    We conducted an AI and Human Evaluator assessment with an **{results['agreement_rate']}% agreement rate** 
-    and **{results['disagreement_rate']}% evaluation gap**.
-    """)
     
-    col1, col2 = st.columns(2)
+    # Executive Summary
+    st.markdown("### Executive Summary")
     
-    with col1:
-        st.markdown('<div class="recommendation-card recommendation-card-green">', unsafe_allow_html=True)
-        st.markdown("**Background Removal Recommendations:**")
-        recommendation = ('Maintain current algorithms, focus on edge cases' 
-                         if results['agreement_rate'] >= 70 
-                         else 'Improve edge detection and segmentation techniques')
-        st.markdown(f"<small>{recommendation}</small>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="recommendation-card recommendation-card-purple">', unsafe_allow_html=True)
-        st.markdown("**AI Evaluation Improvements:**")
-        improvement = ('Fine-tune quality thresholds, ready for production' 
-                      if results['agreement_rate'] >= 70 
-                      else 'Recalibrate scoring weights and evaluation criteria')
-        st.markdown(f"<small>{improvement}</small>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Quality Analysis
-    alignment = 'strong' if results['agreement_rate'] >= 70 else 'moderate'
-    
-    # Analyze disagreements
+    # Analyze disagreements for enhanced summary
     disagreements = [(eval_id, feedback) for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
     additional_text = ""
     
@@ -285,42 +273,173 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
         else:
             additional_text = " Human annotator ratings show balanced distribution compared to AI evaluations."
     
+    # Generate enhanced executive summary
+    alignment = 'strong' if results['agreement_rate'] >= 70 else 'moderate'
+    passes = results['agreement_rate'] >= 70
+    
+    if passes and results['agreement_rate'] >= 90:
+        summary = f"The AI evaluation system demonstrates exceptional performance with a {results['agreement_rate']}% agreement rate. Human validators strongly align with AI assessments, indicating the automated system is ready for enterprise deployment with minimal human oversight required."
+    elif passes:
+        summary = f"The AI evaluation system shows strong performance with a {results['agreement_rate']}% agreement rate. The system demonstrates reliable quality assessment capabilities suitable for production environments with periodic human validation."
+    elif results['agreement_rate'] >= 50:
+        summary = f"The AI evaluation system delivers moderate performance with a {results['agreement_rate']}% agreement rate. While showing promise, additional calibration and refinement are recommended before full deployment to achieve enterprise-grade consistency."
+    else:
+        summary = f"The AI evaluation system shows significant room for improvement with a {results['agreement_rate']}% agreement rate. Substantial recalibration of evaluation criteria and algorithm refinement are necessary before production deployment."
+    
+    # Add threshold context
+    threshold_text = f" The system meets the production readiness threshold with scores exceeding the required 70% standard." if passes else f" The system falls below the production readiness threshold, which requires an agreement rate of at least 70%."
+    
+    summary += threshold_text + additional_text + " Human feedback will be integrated into our reinforcement learning pipeline to continuously improve automated evaluation accuracy."
+    
     st.markdown(f"""
-    **Quality Analysis:** AI evaluator shows {alignment} alignment with human experts.{additional_text} 
-    Human feedback will be fed into our reinforcement learning process to improve automated evaluation performance.
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
+    <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin-bottom: 1.5rem;">
+        {summary}
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Validation Summary Cards
-    st.markdown("## Validation Summary")
-    
+    # Key Metrics using Streamlit metrics
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown('<div class="metric-card metric-card-blue">', unsafe_allow_html=True)
-        st.markdown("### Total Evaluations")
-        st.markdown(f"# {len(st.session_state.evaluations)}")
-        st.markdown("Image pairs evaluated")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.metric(
+            label="Images Evaluated", 
+            value=len(st.session_state.evaluations)
+        )
     
     with col2:
-        st.markdown('<div class="metric-card metric-card-green">', unsafe_allow_html=True)
-        st.markdown("### Agreement Rate")
-        st.markdown(f"# {results['agreement_rate']}%")
-        st.markdown(f"{results['agreement_count']} human approvals")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.metric(
+            label="Agreement Rate",
+            value=f"{results['agreement_rate']}%",
+            delta=f"{results['agreement_count']} approvals"
+        )
     
     with col3:
-        st.markdown('<div class="metric-card metric-card-red">', unsafe_allow_html=True)
-        st.markdown("### Disagreement Rate")
-        st.markdown(f"# {results['disagreement_rate']}%")
-        st.markdown(f"{results['disagreement_count']} human rejections")
-        st.markdown('</div>', unsafe_allow_html=True)
+        status = "✅ Meets Standard" if passes else "❌ Below Standard"
+        st.metric(
+            label="Quality Status",
+            value=status,
+            delta=f"{results['disagreement_count']} rejections"
+        )
     
+    # Agreement vs Disagreement Distribution
+    st.markdown("### Validation Distribution")
+    
+    import plotly.express as px
+    import plotly.graph_objects as go
+    
+    # Create pie chart for agreement/disagreement
+    fig = go.Figure(data=[go.Pie(
+        labels=['Human Approvals', 'Human Rejections'], 
+        values=[results['agreement_count'], results['disagreement_count']],
+        hole=.3,
+        marker_colors=['#16a34a', '#dc2626']
+    )])
+    
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(
+        title="Human Validator Feedback Distribution",
+        title_x=0.5,
+        height=400,
+        showlegend=True
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # AI vs Human Rating Comparison (if there are disagreements)
+    if disagreements and st.session_state.annotator_ratings:
+        st.markdown("### AI vs Human Rating Comparison")
+        
+        # Prepare data for comparison chart
+        comparison_data = []
+        for eval_id, feedback in st.session_state.human_feedback.items():
+            ai_rating = next(e['rating'] for e in st.session_state.evaluations if e['id'] == eval_id)
+            if not feedback and eval_id in st.session_state.annotator_ratings:
+                human_rating = st.session_state.annotator_ratings[eval_id]
+                comparison_data.append({
+                    'Image': f"Image {eval_id}",
+                    'AI Rating': ai_rating,
+                    'Human Rating': human_rating,
+                    'Difference': human_rating - ai_rating
+                })
+        
+        if comparison_data:
+            import pandas as pd
+            df = pd.DataFrame(comparison_data)
+            
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=df['Image'], 
+                y=df['AI Rating'],
+                mode='markers+lines',
+                name='AI Rating',
+                line=dict(color='#3b82f6'),
+                marker=dict(size=10)
+            ))
+            fig.add_trace(go.Scatter(
+                x=df['Image'], 
+                y=df['Human Rating'],
+                mode='markers+lines',
+                name='Human Rating',
+                line=dict(color='#16a34a'),
+                marker=dict(size=10)
+            ))
+            
+            fig.update_layout(
+                title="AI vs Human Ratings (Disagreement Cases Only)",
+                title_x=0.5,
+                xaxis_title="Images",
+                yaxis_title="Rating (1-5)",
+                height=400,
+                yaxis=dict(range=[0, 6], dtick=1)
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Recommendations based on results
+    st.markdown("### Recommendations")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div style="background: white; padding: 1rem; border-radius: 0.25rem; margin: 0.5rem; border-left: 4px solid #22c55e;">
+            <strong>Background Removal Algorithm:</strong><br>
+        """, unsafe_allow_html=True)
+        
+        if results['agreement_rate'] >= 70:
+            st.markdown("Maintain current algorithms, focus on edge cases and specific scenarios where disagreements occurred.")
+        else:
+            st.markdown("Improve edge detection and segmentation techniques based on human feedback patterns.")
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div style="background: white; padding: 1rem; border-radius: 0.25rem; margin: 0.5rem; border-left: 4px solid #a855f7;">
+            <strong>AI Evaluation System:</strong><br>
+        """, unsafe_allow_html=True)
+        
+        if results['agreement_rate'] >= 70:
+            st.markdown("Fine-tune quality thresholds, system ready for production with periodic human validation.")
+        else:
+            st.markdown("Recalibrate scoring weights and evaluation criteria using collected human feedback data.")
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Action buttons
+    col1, col2 = st.columns(2)
+    
+    with col2:
+        if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+            start_new_evaluation()
+            st.rerun()
+    
+    # Footer summary
     st.markdown("---")
     st.markdown(f"""
-    <div style="text-align: center; color: #6b7280; font-size: 0.875rem;">
-    Analysis complete - {results['feedback_count']} evaluations processed with {results['agreement_rate']}% agreement rate
+    <div style="text-align: center; color: #6b7280; font-size: 0.875rem; padding: 1rem;">
+        Analysis complete - {results['feedback_count']} evaluations processed with {results['agreement_rate']}% agreement rate<br>
+        <strong>Next Steps:</strong> {'Proceed with production deployment' if passes else 'Implement recommended improvements before deployment'}
     </div>
     """, unsafe_allow_html=True)
 
@@ -363,13 +482,16 @@ else:
         
         for i, pair in enumerate(DEMO_RESULTS):
             st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-            col1, col2, col3 = st.columns([2, 2, 3])
+            col1, col2, col3, col4 = st.columns([2, 1, 2, 3])
             
             with col1:
                 st.markdown("**Original**")
                 st.image(pair['original'], width=200)
             
             with col2:
+                st.markdown("<div style='text-align: center; padding-top: 50px; font-size: 2rem; color: #6b7280;'>→</div>", unsafe_allow_html=True)
+            
+            with col3:
                 st.markdown("**Processed**")
                 st.image(pair['processed'], width=200)
             
@@ -398,7 +520,7 @@ else:
     if st.session_state.evaluations:
         col1, col2 = st.columns([3, 1])
         with col1:
-            st.markdown("## Validate AI rating using 👍 or 👎")
+            st.markdown("## Validate AI Ratings")
         with col2:
             if st.button("🔄 Reset", use_container_width=True):
                 start_new_evaluation()
