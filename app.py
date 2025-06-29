@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for styling
+# Custom CSS for styling with image magnification
 st.markdown("""
 <style>
     .main-header {
@@ -163,7 +163,156 @@ st.markdown("""
         color: #1f2937;
         margin-bottom: 1rem;
     }
+
+    /* Image Magnification Styles */
+    .image-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    
+    .image-container:hover {
+        transform: scale(1.05);
+        z-index: 10;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .magnify-image {
+        width: 120px;
+        height: auto;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .magnify-image:hover {
+        border: 2px solid #3b82f6;
+        transform: scale(1.1);
+    }
+    
+    /* Click to enlarge styles */
+    .clickable-image {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    
+    .clickable-image::after {
+        content: "🔍";
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 50%;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    
+    .clickable-image:hover::after {
+        opacity: 1;
+    }
+    
+    /* Modal styles for enlarged image */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        animation: fadeIn 0.3s;
+    }
+    
+    .modal-content {
+        display: block;
+        margin: auto;
+        max-width: 90%;
+        max-height: 90%;
+        margin-top: 2%;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    
+    .close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+    .close:hover {
+        color: #ccc;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Image caption in modal */
+    .modal-caption {
+        text-align: center;
+        color: white;
+        padding: 10px 0;
+        font-size: 16px;
+    }
 </style>
+
+<!-- Modal for enlarged images -->
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div class="modal-caption" id="modalCaption"></div>
+</div>
+
+<script>
+// JavaScript for image magnification modal
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    
+    // Function to open modal
+    window.openImageModal = function(src, caption) {
+        modal.style.display = 'block';
+        modalImg.src = src;
+        modalCaption.innerHTML = caption;
+    }
+    
+    // Close modal when clicking the X
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Close modal when clicking outside the image
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Close modal with escape key
+    document.onkeydown = function(event) {
+        if (event.key === 'Escape') {
+            modal.style.display = 'none';
+        }
+    }
+});
+</script>
 """, unsafe_allow_html=True)
 
 # Initialize session state
@@ -226,6 +375,14 @@ if not st.session_state.evaluations:
 def get_quality_color(rating: int) -> str:
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
+
+def create_magnifiable_image(image_path: str, caption: str, width: int = 120) -> str:
+    """Create HTML for a magnifiable image with click-to-enlarge functionality"""
+    return f"""
+    <div class="image-container clickable-image" onclick="openImageModal('{image_path}', '{caption}')">
+        <img src="{image_path}" alt="{caption}" class="magnify-image" style="width: {width}px;">
+    </div>
+    """
 
 def submit_responses():
     feedback_count = len(st.session_state.human_feedback)
@@ -394,12 +551,13 @@ elif st.session_state.show_thank_you:
 # Main Application - Validate AI Ratings (Landing Page)
 else:
     # Header
-    st.markdown('<h1 class="instructions-title">Sara’s AI Judge for Background Removal</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="instructions-title">Sara's AI Judge for Background Removal</h1>', unsafe_allow_html=True)
     
-    # Instructions
+    # Instructions with magnification tip
     st.markdown("""
     <div class="instructions-box">
         <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
+        <strong>💡 Tip:</strong> Hover over images to see a preview magnification, or click on any image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
         <strong>3 - Moderately Functional:</strong> Largely usable, with moderate fixes needed. More efficient than starting from scratch.<br>
@@ -426,11 +584,25 @@ else:
         
         with col1:
             st.markdown("**Original**")
-            st.image(eval_data['original'], width=120)
+            # Use custom magnifiable image HTML
+            st.markdown(
+                create_magnifiable_image(
+                    eval_data['original'], 
+                    f"Original Image {eval_id}"
+                ), 
+                unsafe_allow_html=True
+            )
         
         with col2:
             st.markdown("**Processed**")
-            st.image(eval_data['processed'], width=120)
+            # Use custom magnifiable image HTML
+            st.markdown(
+                create_magnifiable_image(
+                    eval_data['processed'], 
+                    f"Processed Image {eval_id} - {eval_data['quality']}"
+                ), 
+                unsafe_allow_html=True
+            )
         
         with col3:
             st.markdown("**AI Rating**")
