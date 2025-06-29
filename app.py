@@ -678,29 +678,47 @@ else:
         
         with col1:
             st.markdown("**Original**")
-            # Create clickable image placeholder
-            st.markdown(
-                create_clickable_image_placeholder(
-                    eval_data['original'], 
-                    f"Original Image {eval_id}",
-                    eval_id,
-                    "Original"
-                ), 
-                unsafe_allow_html=True
-            )
+            # Use Streamlit's native image with a clickable button overlay
+            if st.button(f"🔍", key=f"orig_{eval_id}", help="Click to magnify image"):
+                # Store which image to show in session state
+                st.session_state[f'show_modal_{eval_id}_orig'] = True
+            
+            # Show the actual image using Streamlit
+            try:
+                st.image(eval_data['original'], width=120, caption=f"Original {eval_id}")
+            except:
+                # Fallback if image doesn't exist
+                st.markdown(f"""
+                <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+                     display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                    <div style="text-align: center; color: #6b7280;">
+                        <div>🖼️</div>
+                        <small>Original {eval_id}</small>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
         
         with col2:
             st.markdown("**Processed**")
-            # Create clickable image placeholder  
-            st.markdown(
-                create_clickable_image_placeholder(
-                    eval_data['processed'], 
-                    f"Processed Image {eval_id} - {eval_data['quality']}",
-                    eval_id,
-                    "Processed"
-                ), 
-                unsafe_allow_html=True
-            )
+            # Use Streamlit's native image with a clickable button overlay
+            if st.button(f"🔍", key=f"proc_{eval_id}", help="Click to magnify image"):
+                # Store which image to show in session state
+                st.session_state[f'show_modal_{eval_id}_proc'] = True
+            
+            # Show the actual image using Streamlit
+            try:
+                st.image(eval_data['processed'], width=120, caption=f"Processed {eval_id}")
+            except:
+                # Fallback if image doesn't exist
+                st.markdown(f"""
+                <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+                     display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                    <div style="text-align: center; color: #6b7280;">
+                        <div>🖼️</div>
+                        <small>Processed {eval_id}</small>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
         
         with col3:
             st.markdown("**AI Rating**")
@@ -755,6 +773,40 @@ else:
                 st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Show modals if triggered
+    for eval_data in st.session_state.evaluations:
+        eval_id = eval_data['id']
+        
+        # Check for original image modal
+        if st.session_state.get(f'show_modal_{eval_id}_orig', False):
+            with st.container():
+                st.markdown("### 🔍 Magnified View - Original Image")
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    try:
+                        st.image(eval_data['original'], use_container_width=True, caption=f"Original Image {eval_id}")
+                    except:
+                        st.error(f"Could not load image: {eval_data['original']}")
+                    
+                    if st.button("Close", key=f"close_orig_{eval_id}"):
+                        st.session_state[f'show_modal_{eval_id}_orig'] = False
+                        st.rerun()
+        
+        # Check for processed image modal  
+        if st.session_state.get(f'show_modal_{eval_id}_proc', False):
+            with st.container():
+                st.markdown("### 🔍 Magnified View - Processed Image")
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    try:
+                        st.image(eval_data['processed'], use_container_width=True, caption=f"Processed Image {eval_id} - {eval_data['quality']}")
+                    except:
+                        st.error(f"Could not load image: {eval_data['processed']}")
+                    
+                    if st.button("Close", key=f"close_proc_{eval_id}"):
+                        st.session_state[f'show_modal_{eval_id}_proc'] = False
+                        st.rerun()
     
     # Submit button
     if st.session_state.human_feedback:
