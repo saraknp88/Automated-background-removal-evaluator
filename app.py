@@ -194,6 +194,27 @@ def render_header():
     </div>
     """, unsafe_allow_html=True)
 
+# Evaluation preview without title (for when title is shown separately)
+def render_evaluation_preview_without_title():
+    demo_data = get_demo_data()
+    
+    for i, pair in enumerate(demo_data):
+        with st.container():
+            col1, col3 = st.columns([2, 2])
+            
+            with col1:
+                st.markdown("**Original**")
+                img = load_image_with_fallback(pair['original'], 150, 120)
+                st.image(img, caption=pair['original'], width=150)
+            
+            with col3:
+                st.markdown("**Processed**")
+                img = load_image_with_fallback(pair['processed'], 150, 120)
+                st.image(img, caption=pair['processed'], width=150)
+        
+        if i < len(demo_data) - 1:
+            st.divider()
+
 # Evaluation preview
 def render_evaluation_preview():
     st.markdown("### 📋 Image Pairs to be Evaluated")
@@ -653,9 +674,11 @@ def main():
     # Navigation logic
     if st.session_state.current_page == 'main':
         if not st.session_state.evaluation_complete:
-            # Move the start button to the top, before the preview
-            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-            with col4:
+            # Put title and button on the same row
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                st.markdown("### 📋 Image Pairs to be Evaluated")
+            with col2:
                 if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval",
                             help="Begin the automated evaluation process"):
                     simulate_ai_evaluation()
@@ -663,8 +686,8 @@ def main():
             # Add some spacing
             st.markdown("---")
             
-            # Now show the preview
-            render_evaluation_preview()
+            # Now show the preview (without the title since it's already shown above)
+            render_evaluation_preview_without_title()
         else:
             render_validation_interface()
     
