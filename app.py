@@ -611,7 +611,7 @@ else:
             next_disabled = not current_has_feedback
             next_help = "Please provide feedback (👍 or 👎) before proceeding" if next_disabled else "Go to next image"
             
-            if st.button("Next →", disabled=next_disabled, help=next_help, use_container_width=True):
+            if st.button("Next →", disabled=next_disabled, type="primary", help=next_help, use_container_width=True):    
                 next_image()
         else:
             # Submit button on last image - also requires feedback
