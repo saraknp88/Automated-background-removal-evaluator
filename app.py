@@ -80,18 +80,19 @@ st.markdown("""
 
 # Initialize session state
 def initialize_session_state():
-    if 'evaluations' not in st.session_state:
-        st.session_state.evaluations = []
-    if 'human_feedback' not in st.session_state:
-        st.session_state.human_feedback = {}
-    if 'annotator_ratings' not in st.session_state:
-        st.session_state.annotator_ratings = {}
-    if 'analysis_results' not in st.session_state:
-        st.session_state.analysis_results = None
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = 'main'
-    if 'evaluation_complete' not in st.session_state:
-        st.session_state.evaluation_complete = False
+    # Initialize all session state variables with default values
+    defaults = {
+        'evaluations': [],
+        'human_feedback': {},
+        'annotator_ratings': {},
+        'analysis_results': None,
+        'current_page': 'main',
+        'evaluation_complete': False
+    }
+    
+    for key, default_value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = default_value
 
 # Demo data
 def get_demo_data():
@@ -539,9 +540,38 @@ def render_analysis_dashboard():
     reinforcement learning processes to improve automated evaluation performance.
     """)
 
+# Sidebar
+def render_sidebar():
+    with st.sidebar:
+        st.markdown("### 📋 About")
+        st.markdown("""
+        This application simulates an AI evaluation validation workflow for background removal quality assessment.
+        
+        **Process:**
+        1. AI evaluates image pairs
+        2. Humans validate AI ratings
+        3. Analysis provides insights
+        
+        **Rating Scale:**
+        - 1: Not Viable
+        - 2: Partially Viable  
+        - 3: Moderately Functional
+        - 4: Near Production Ready
+        - 5: Production Ready
+        """)
+        
+        # Only show back button if not on main page
+        if st.session_state.get('current_page', 'main') != 'main':
+            if st.button("🏠 Back to Main", key="home_btn"):
+                st.session_state.current_page = 'main'
+                st.rerun()
+
 # Main application logic
 def main():
+    # Initialize session state FIRST before anything else
     initialize_session_state()
+    
+    # Now render the header and rest of the app
     render_header()
     
     # Navigation logic
@@ -561,30 +591,10 @@ def main():
     
     elif st.session_state.current_page == 'analysis':
         render_analysis_dashboard()
+    
+    # Render sidebar
+    render_sidebar()
 
-# Sidebar
-with st.sidebar:
-    st.markdown("### 📋 About")
-    st.markdown("""
-    This application simulates an AI evaluation validation workflow for background removal quality assessment.
-    
-    **Process:**
-    1. AI evaluates image pairs
-    2. Humans validate AI ratings
-    3. Analysis provides insights
-    
-    **Rating Scale:**
-    - 1: Not Viable
-    - 2: Partially Viable  
-    - 3: Moderately Functional
-    - 4: Near Production Ready
-    - 5: Production Ready
-    """)
-    
-    if st.session_state.current_page != 'main':
-        if st.button("🏠 Back to Main", key="home_btn"):
-            st.session_state.current_page = 'main'
-            st.rerun()
 
 if __name__ == "__main__":
     main()
