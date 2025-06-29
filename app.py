@@ -663,15 +663,6 @@ def main():
         if not st.session_state.evaluation_complete:
             render_evaluation_preview()
             
-            # Create a clean start section
-            st.markdown("---")
-            st.markdown("""
-            <div class="submit-button-section">
-                <h4 style="margin-bottom: 1rem; color: #667eea;">Ready to Begin?</h4>
-                <p style="margin-bottom: 1rem; color: #6c757d;">Click below to start the AI evaluation process</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
             col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
             with col4:
                 if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval",
