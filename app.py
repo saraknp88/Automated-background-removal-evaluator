@@ -614,13 +614,15 @@ can_proceed = (current_has_feedback and
               (not current_feedback_is_negative or current_has_rating))
 
 # Create navigation without progress bar
-col1, col2 = st.columns([1, 1])
+col1, col2, col3 = st.columns([1, 3, 1])
 
 with col1:
     if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
         previous_image()
-
 with col2:
+    st.write("")  # Empty space
+    
+with col3:
     if current_position < total_images:
         # Disable Next button if no feedback provided OR thumbs down without rating
         next_help = ""
