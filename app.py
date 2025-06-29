@@ -396,30 +396,10 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        # Create a clean submit section at the bottom
-        st.markdown("---")
-        st.markdown("""
-        <div class="submit-button-section">
-            <h4 style="margin-bottom: 1rem; color: #667eea;">Complete Your Evaluation</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
         col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
         with col4:
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
-            
-            # Show validation summary
-            total_feedback = len(st.session_state.human_feedback)
-            st.info(f"✅ Completed: {total_feedback}/5 evaluations")
-            
-            if st.button("🎉 Submit All Responses", disabled=not can_submit, key="submit_btn_bottom",
-                        help="Final submission of all feedback and ratings"):
-                if can_submit:
-                    calculate_analysis()
-                    show_celebration()
-                    st.session_state.current_page = 'thank_you'
-                    st.rerun()
 
 # Celebration animation
 def show_celebration():
