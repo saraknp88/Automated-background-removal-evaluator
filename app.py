@@ -383,20 +383,7 @@ else:
             <span class="brain-icon">🧠</span>
             <h1 class="main-title">Sara's AI Evaluation Validator</h1>
         </div>
-          # Instructions
-    st.markdown("""
-    <div class="criteria-list">
-        <strong>Assess AI-generated background removal results for production readiness. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
-        <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
-        <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
-        <strong>3 - Moderately Functional:</strong> Largely usable, with moderate fixes needed. More efficient than starting from scratch.<br>
-        <strong>4 - Near Production Ready:</strong> Only minor adjustments needed, such as light cleanup or retouching.<br>
-        <strong>5 - Production Ready:</strong> No further edits needed. Ready for immediate use.
-    </div>
-    """, unsafe_allow_html=True)
-    </div>
-    """, unsafe_allow_html=True)
-    
+        
     # Validation interface
     col1, col2 = st.columns([3, 1])
     with col1:
