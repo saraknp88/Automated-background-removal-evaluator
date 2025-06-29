@@ -604,49 +604,65 @@ else:
                     st.session_state[f'show_modal_{eval_id}_proc'] = False
                     st.rerun()
     
-    # Bottom navigation
-    st.markdown("---")
-    
-    # Check if current image has feedback
-    current_has_feedback = eval_id in st.session_state.human_feedback
-    
-    # Create navigation with progress bar in center
-    col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
-    
-    with col1:
-        if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
-            previous_image()
-    
-    with col2:
-        st.write("")  # Empty space
-    
-    #with col3:
-        # Progress bar in center
-      #  progress = current_position / total_images
-      #  st.progress(progress, text=f"Progress: {current_position}/{total_images}")
-    
-    with col4:
-        st.write("")  # Empty space
-    
-    with col5:
-        if current_position < total_images:
-            # Disable Next button if no feedback provided for current image
-            next_disabled = not current_has_feedback
-            next_help = "Please provide feedback (👍 or 👎) before proceeding" if next_disabled else "Go to next image"
-            
-            if st.button("Next →", disabled=next_disabled, type="primary", help=next_help, use_container_width=True):    
-                next_image()
+    # Bottom navigation:Check if current image has feedback and required rating
+current_has_feedback = eval_id in st.session_state.human_feedback
+current_feedback_is_negative = st.session_state.human_feedback.get(eval_id) is False
+current_has_rating = eval_id in st.session_state.annotator_ratings
+
+# Determine if user can proceed
+can_proceed = (current_has_feedback and 
+              (not current_feedback_is_negative or current_has_rating))
+
+# Create navigation with progress bar in center
+col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
+
+with col1:
+    if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
+        previous_image()
+
+with col2:
+    st.write("")  # Empty space
+
+with col3:
+    # Progress bar in center
+    progress = current_position / total_images
+    st.progress(progress, text=f"Progress: {current_position}/{total_images}")
+
+with col4:
+    st.write("")  # Empty space
+
+with col5:
+    if current_position < total_images:
+        # Disable Next button if no feedback provided OR thumbs down without rating
+        next_help = ""
+        if not current_has_feedback:
+            next_help = "Please provide feedback (👍 or 👎) before proceeding"
+        elif current_feedback_is_negative and not current_has_rating:
+            next_help = "Please provide your rating before proceeding"
         else:
-            # Submit button on last image - also requires feedback
-            thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
-            missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
-            can_submit = len(missing_ratings) == 0 and len(st.session_state.human_feedback) == total_images
-            
-            submit_help = "All images must have feedback before submitting" if not can_submit else "Submit all responses"
-            
-            if st.button("✨ Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
-                submit_responses()
-    
-    # Show feedback requirement message if no feedback provided
-    if not current_has_feedback:
-        st.info("👆 Please provide your feedback (👍 agree or 👎 disagree) to proceed to the next image.")
+            next_help = "Go to next image"
+        
+        if st.button("Next →", disabled=not can_proceed, help=next_help, use_container_width=True):
+            next_image()
+    else:
+        # Submit button logic - check all images have required feedback/ratings
+        all_images_complete = True
+        for img_eval_id in [e['id'] for e in st.session_state.evaluations]:
+            if img_eval_id not in st.session_state.human_feedback:
+                all_images_complete = False
+                break
+            if (st.session_state.human_feedback[img_eval_id] is False and 
+                img_eval_id not in st.session_state.annotator_ratings):
+                all_images_complete = False
+                break
+        
+        submit_help = "Complete all required ratings before submitting" if not all_images_complete else "Submit all responses"
+        
+        if st.button("Submit", type="primary", disabled=not all_images_complete, help=submit_help, use_container_width=True):
+            submit_responses()
+
+# Show appropriate feedback message
+if not current_has_feedback:
+    st.info("👆 Please provide your feedback (👍 agree or 👎 disagree) to proceed to the next image.")
+elif current_feedback_is_negative and not current_has_rating:
+    st.warning("👆 Since you disagreed with the AI rating, please provide your own rating before proceeding.")
