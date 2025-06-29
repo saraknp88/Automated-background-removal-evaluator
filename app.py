@@ -281,13 +281,13 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     results = st.session_state.analysis_results
     
     # Executive Summary
-  col1, col2, col3 = st.columns([1, 3, 1]) 
+    col1, col2, col3 = st.columns([1, 3, 1]) 
 
-  with col1:
-     st.markdown("### Executive Summary")
+   with col1:
+      st.markdown("### Executive Summary")
 
-  with col3:
-     if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
+   with col3:
+      if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
          start_new_evaluation()
          st.rerun()
 
