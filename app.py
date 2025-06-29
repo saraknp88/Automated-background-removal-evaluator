@@ -437,7 +437,7 @@ else:
     # Top navigation bar
     col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        st.markdown(f"<h3 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h4 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h4>", unsafe_allow_html=True)
     with col2:
         st.write("") 
     
