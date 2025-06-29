@@ -459,15 +459,17 @@ else:
     current_position = st.session_state.current_image_index + 1
     validated_count = len(st.session_state.human_feedback)
     
-    # Top navigation bar
+     # Top navigation bar
     col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
+        st.markdown(f"<h4 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h4>", unsafe_allow_html=True)
+    with col2:
+        st.write("") 
+    
+    with col3:
         if st.button("🔄 Reset", use_container_width=True):
             start_new_evaluation()
-    with col2:
-        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"<div style='text-align: center; padding-top: 10px;'><strong>{validated_count}/{total_images} validated</strong></div>", unsafe_allow_html=True)
+
     
     st.markdown("---")
     
