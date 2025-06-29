@@ -604,7 +604,7 @@ else:
                     st.session_state[f'show_modal_{eval_id}_proc'] = False
                     st.rerun()
     
-    # Bottom navigation:Check if current image has feedback and required rating
+# Check if current image has feedback and required rating
 current_has_feedback = eval_id in st.session_state.human_feedback
 current_feedback_is_negative = st.session_state.human_feedback.get(eval_id) is False
 current_has_rating = eval_id in st.session_state.annotator_ratings
@@ -613,23 +613,14 @@ current_has_rating = eval_id in st.session_state.annotator_ratings
 can_proceed = (current_has_feedback and 
               (not current_feedback_is_negative or current_has_rating))
 
-# Create navigation with progress bar in center
-col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
+# Create navigation without progress bar
+col1, col2 = st.columns([1, 1])
 
 with col1:
     if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
         previous_image()
 
 with col2:
-    st.write("")  # Empty space
-
-with col3:
-     st.write("")  # Empty space
-
-with col4:
-    st.write("")  # Empty space
-
-with col5:
     if current_position < total_images:
         # Disable Next button if no feedback provided OR thumbs down without rating
         next_help = ""
