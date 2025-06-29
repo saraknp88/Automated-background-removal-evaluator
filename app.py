@@ -403,23 +403,41 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
 
 # Thank You Page
 elif st.session_state.show_thank_you:
-    st.markdown('<div class="thank-you-container">', unsafe_allow_html=True)
-    st.markdown('<div class="success-icon">✓</div>', unsafe_allow_html=True)
-    st.markdown("# Thank you for your participation!")
-    st.markdown("### Your responses have been recorded successfully.")
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        col_a, col_b = st.columns(2)
-        with col_a:
-            if st.button("📊 View Analysis", type="primary", use_container_width=True):
-                st.session_state.show_thank_you = False
-                st.session_state.show_analysis = True
-                st.rerun()
-        with col_b:
-            if st.button("🔄 Start New Evaluation", use_container_width=True):
-                start_new_evaluation()
-    st.markdown('</div>', unsafe_allow_html=True)
+   # Custom celebration banner
+   st.markdown("""
+   <div style="
+       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+       border-radius: 1rem;
+       padding: 3rem 2rem;
+       text-align: center;
+       color: white;
+       margin: 2rem 0;
+       box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+   ">
+       <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold;">
+           🎉 Evaluation Complete! 🎉
+       </h1>
+       <h2 style="margin: 1rem 0 0.5rem 0; font-size: 1.5rem; font-weight: normal;">
+           Thank you for your participation!
+       </h2>
+       <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.9;">
+           Your responses have been recorded successfully.
+       </p>
+   </div>
+   """, unsafe_allow_html=True)
+   
+   # Action buttons
+   col1, col2 = st.columns(2)
+   
+   with col1:
+       if st.button("📊 View Analysis", type="primary", use_container_width=True):
+           st.session_state.show_thank_you = False
+           st.session_state.show_analysis = True
+           st.rerun()
+   
+   with col2:
+       if st.button("🔄 Start New Evaluation", use_container_width=True):
+           start_new_evaluation()
 
 # Main Application - Single Image View
 else:
