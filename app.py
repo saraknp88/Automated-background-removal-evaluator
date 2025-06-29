@@ -389,7 +389,7 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
     col1, col2 = st.columns(2)
     
     with col2:
-        if st.button("🔄 Start New Evaluation", key="start_new_styled"):
+        if st.button("🔄 Start New Evaluation", use_container_width=True):
             start_new_evaluation()
             st.rerun()
 
@@ -433,7 +433,7 @@ elif st.session_state.show_thank_you:
             st.rerun()
     
     with col2:
-        if st.button("🔄 Start New Evaluation", key="start_new_styled"):
+        if st.button("🔄 Start New Evaluation", use_container_width=True):
             start_new_evaluation()
 
 # Main Application - Single Image View
