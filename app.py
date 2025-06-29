@@ -435,9 +435,11 @@ else:
     validated_count = len(st.session_state.human_feedback)
     
     # Top navigation bar
-    col1, col2 = st.columns([1, 3])
+    col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"<div style='text-align: center; padding-top: 10px;'></div>", unsafe_allow_html=True)
     
     with col2:
         if st.button("🔄 Reset", use_container_width=True):
