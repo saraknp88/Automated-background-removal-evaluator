@@ -274,20 +274,20 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             additional_text = " Human annotator ratings show balanced distribution compared to AI evaluations."
     
     # Generate enhanced executive summary
-    alignment = 'strong' if results['agreement_rate'] >= 70 else 'moderate'
-    passes = results['agreement_rate'] >= 70
+    alignment = 'strong' if results['agreement_rate'] >= 80 else 'moderate'
+    passes = results['agreement_rate'] >= 80
     
     if passes and results['agreement_rate'] >= 90:
         summary = f"The AI evaluation system demonstrates exceptional performance with a {results['agreement_rate']}% agreement rate. Human validators strongly align with AI assessments, indicating the automated system is ready for enterprise deployment with minimal human oversight required."
     elif passes:
         summary = f"The AI evaluation system shows strong performance with a {results['agreement_rate']}% agreement rate. The system demonstrates reliable quality assessment capabilities suitable for production environments with periodic human validation."
-    elif results['agreement_rate'] >= 50:
+    elif results['agreement_rate'] >= 60:
         summary = f"The AI evaluation system delivers moderate performance with a {results['agreement_rate']}% agreement rate. While showing promise, additional calibration and refinement are recommended before full deployment to achieve enterprise-grade consistency."
     else:
         summary = f"The AI evaluation system shows significant room for improvement with a {results['agreement_rate']}% agreement rate. Substantial recalibration of evaluation criteria and algorithm refinement are necessary before production deployment."
     
     # Add threshold context
-    threshold_text = f" The system meets the production readiness threshold with scores exceeding the required 70% standard." if passes else f" The system falls below the production readiness threshold, which requires an agreement rate of at least 70%."
+    threshold_text = f" The system meets the production readiness threshold with scores exceeding the required 80% standard." if passes else f" The system falls below the production readiness threshold, which requires an agreement rate of at least 80%."
     
     summary += threshold_text + additional_text + " Human feedback will be integrated into our reinforcement learning pipeline to continuously improve automated evaluation accuracy."
     
@@ -321,80 +321,6 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             delta=f"{results['disagreement_count']} rejections"
         )
     
-    # Agreement vs Disagreement Distribution
-    st.markdown("### Validation Distribution")
-    
-    import plotly.express as px
-    import plotly.graph_objects as go
-    
-    # Create pie chart for agreement/disagreement
-    fig = go.Figure(data=[go.Pie(
-        labels=['Human Approvals', 'Human Rejections'], 
-        values=[results['agreement_count'], results['disagreement_count']],
-        hole=.3,
-        marker_colors=['#16a34a', '#dc2626']
-    )])
-    
-    fig.update_traces(textposition='inside', textinfo='percent+label')
-    fig.update_layout(
-        title="Human Validator Feedback Distribution",
-        title_x=0.5,
-        height=400,
-        showlegend=True
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # AI vs Human Rating Comparison (if there are disagreements)
-    if disagreements and st.session_state.annotator_ratings:
-        st.markdown("### AI vs Human Rating Comparison")
-        
-        # Prepare data for comparison chart
-        comparison_data = []
-        for eval_id, feedback in st.session_state.human_feedback.items():
-            ai_rating = next(e['rating'] for e in st.session_state.evaluations if e['id'] == eval_id)
-            if not feedback and eval_id in st.session_state.annotator_ratings:
-                human_rating = st.session_state.annotator_ratings[eval_id]
-                comparison_data.append({
-                    'Image': f"Image {eval_id}",
-                    'AI Rating': ai_rating,
-                    'Human Rating': human_rating,
-                    'Difference': human_rating - ai_rating
-                })
-        
-        if comparison_data:
-            import pandas as pd
-            df = pd.DataFrame(comparison_data)
-            
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=df['Image'], 
-                y=df['AI Rating'],
-                mode='markers+lines',
-                name='AI Rating',
-                line=dict(color='#3b82f6'),
-                marker=dict(size=10)
-            ))
-            fig.add_trace(go.Scatter(
-                x=df['Image'], 
-                y=df['Human Rating'],
-                mode='markers+lines',
-                name='Human Rating',
-                line=dict(color='#16a34a'),
-                marker=dict(size=10)
-            ))
-            
-            fig.update_layout(
-                title="AI vs Human Ratings (Disagreement Cases Only)",
-                title_x=0.5,
-                xaxis_title="Images",
-                yaxis_title="Rating (1-5)",
-                height=400,
-                yaxis=dict(range=[0, 6], dtick=1)
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
-    
     # Recommendations based on results
     st.markdown("### Recommendations")
     
@@ -406,7 +332,7 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             <strong>Background Removal Algorithm:</strong><br>
         """, unsafe_allow_html=True)
         
-        if results['agreement_rate'] >= 70:
+        if results['agreement_rate'] >= 80:
             st.markdown("Maintain current algorithms, focus on edge cases and specific scenarios where disagreements occurred.")
         else:
             st.markdown("Improve edge detection and segmentation techniques based on human feedback patterns.")
@@ -419,7 +345,7 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
             <strong>AI Evaluation System:</strong><br>
         """, unsafe_allow_html=True)
         
-        if results['agreement_rate'] >= 70:
+        if results['agreement_rate'] >= 80:
             st.markdown("Fine-tune quality thresholds, system ready for production with periodic human validation.")
         else:
             st.markdown("Recalibrate scoring weights and evaluation criteria using collected human feedback data.")
@@ -433,15 +359,6 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
         if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
             start_new_evaluation()
             st.rerun()
-    
-    # Footer summary
-    st.markdown("---")
-    st.markdown(f"""
-    <div style="text-align: center; color: #6b7280; font-size: 0.875rem; padding: 1rem;">
-        Analysis complete - {results['feedback_count']} evaluations processed with {results['agreement_rate']}% agreement rate<br>
-        <strong>Next Steps:</strong> {'Proceed with production deployment' if passes else 'Implement recommended improvements before deployment'}
-    </div>
-    """, unsafe_allow_html=True)
 
 # Thank You Page
 elif st.session_state.show_thank_you:
