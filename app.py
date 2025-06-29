@@ -437,7 +437,6 @@ else:
             color = get_quality_color(eval_data['rating'])
             st.markdown(f"""
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <div class="quality-badge" style="background-color: {color};">{eval_data['rating']}</div>
                 <span style="font-size: 1.125rem; font-weight: 600;">{eval_data['rating']}/5</span>
             </div>
             """, unsafe_allow_html=True)
