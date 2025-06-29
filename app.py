@@ -386,9 +386,13 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
         
         st.markdown("</div>", unsafe_allow_html=True)
 
-      if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
-         start_new_evaluation()
-         st.rerun()
+       # Action buttons
+    col1, col2 = st.columns(2)
+    
+    with col2:
+        if st.button("🔄 Start New Evaluation", type="secondary"):
+            reset_evaluation()
+            st.rerun()
 
 # Thank You Page
 elif st.session_state.show_thank_you:
