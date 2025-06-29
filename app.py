@@ -18,33 +18,53 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for better styling
+# Enhanced CSS for React-like styling and consistent color theme
 st.markdown("""
 <style>
     .main-header {
-        text-align: center;
-        padding: 2rem 0;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 10px;
-        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
     }
-    
+    .sub-header {
+        font-size: 1.2rem;
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+    }
     .metric-card {
         background: white;
         padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin: 1rem 0;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .criteria-list {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #3b82f6;
+        margin-bottom: 1.5rem;
+    }
+    .stButton > button {
+        width: 100%;
+    }
+    .celebration {
+        text-align: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 1rem;
+        color: white;
+        margin: 2rem 0;
     }
     
     .evaluation-card {
         background: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
     .quality-badge {
@@ -55,44 +75,201 @@ st.markdown("""
         font-size: 0.85rem;
     }
     
-    .celebration {
+    .image-container {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+    }
+    
+    .note-box {
+        background: #fef3c7;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin-top: 1.5rem;
+        border: 1px solid #f59e0b;
+    }
+    
+    /* Navigation button styling */
+    .nav-button-container {
+        position: relative;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .nav-button-right {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+    }
+    
+    .nav-button-small {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+        width: auto !important;
+        min-width: 100px;
+        max-width: 150px;
+    }
+    
+    .disabled-nav-button {
+        text-align: right;
+        margin-top: 1.5rem;
+    }
+    
+    .disabled-nav-button > div {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #f3f4f6;
+        color: #9ca3af;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        min-width: 180px;
+        max-width: 200px;
         text-align: center;
-        padding: 3rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
+    }
+    
+    /* Progress bar styling */
+    .stProgress .st-bo {
+        background-color: #3b82f6;
+    }
+    
+    /* Button styling */
+    .stButton > button[kind="primary"] {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+    }
+    
+    .stButton > button[kind="secondary"] {
+        background-color: #f3f4f6;
+        border-color: #d1d5db;
+        color: #374151;
+    }
+    
+    /* Override button width for navigation buttons */
+    .nav-button-right .stButton > button {
+        width: auto !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+        min-width: 180px;
+        max-width: 200px;
+    }
+    
+    /* Feedback button containers */
+    .feedback-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .feedback-button-container {
+        flex: 1;
+    }
+    
+    .feedback-button-container .stButton > button {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 1.2rem !important;
+        border-radius: 0.5rem !important;
+        font-weight: bold !important;
+    }
+    
+    /* Thumbs up button - green theme */
+    .thumbs-up .stButton > button {
+        background-color: #16a34a !important;
+        border-color: #16a34a !important;
+        color: white !important;
+    }
+    
+    .thumbs-up .stButton > button:hover {
+        background-color: #15803d !important;
+    }
+    
+    /* Thumbs down button - red theme */
+    .thumbs-down .stButton > button {
+        background-color: #dc2626 !important;
+        border-color: #dc2626 !important;
+        color: white !important;
+    }
+    
+    .thumbs-down .stButton > button:hover {
+        background-color: #b91c1c !important;
+    }
+    
+    /* Selected state for feedback buttons */
+    .feedback-selected-up {
+        background-color: #15803d !important;
+        box-shadow: 0 0 0 2px #16a34a !important;
+    }
+    
+    .feedback-selected-down {
+        background-color: #b91c1c !important;
+        box-shadow: 0 0 0 2px #dc2626 !important;
+    }
+    
+    /* Table styling improvements */
+    .evaluation-table {
+        background: white;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+    
+    .table-header {
+        background: #f8fafc;
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    .table-row {
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .table-row:last-child {
+        border-bottom: none;
+    }
+    
+    /* Submit section styling */
+    .submit-section {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
         margin: 2rem 0;
     }
     
-    .stButton > button {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-weight: bold;
-        width: 100%;
-        margin: 0.25rem 0;
-    }
-    
-    .button-container {
+    .submit-button-right {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-        padding: 1rem;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
     }
     
-    .submit-button-section {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
-        border-radius: 10px;
-        padding: 1rem;
-        margin: 1rem 0;
+    .submit-button-right .stButton > button {
+        width: auto !important;
+        min-width: 200px;
+        padding: 0.75rem 1.5rem !important;
+        font-size: 1rem !important;
+        font-weight: bold !important;
     }
     
-    .feedback-button {
-        margin: 0.2rem;
+    /* Rating selectbox styling */
+    .stSelectbox > div > div {
+        background-color: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.375rem;
+    }
+    
+    .stSelectbox > div > div:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px #3b82f6;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -159,7 +336,7 @@ def get_demo_data():
         }
     ]
 
-# Quality colors mapping
+# Quality colors mapping - consistent with Background Removal Evaluator
 def get_quality_color(rating):
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
@@ -183,59 +360,38 @@ def create_placeholder_image(width=200, height=150, text="Demo Image"):
     # You could add text to the image here if needed
     return img
 
-# Main header
+# Main header - consistent with Background Removal Evaluator
 def render_header():
-    st.markdown("""
-    <div class="main-header">
-        <h1>🧠 Sara's AI Evaluation Validator</h1>
-        <p style="font-size: 1.2rem; margin-top: 1rem;">
-            Validate AI background removal ratings with thumbs up/down feedback
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Sara\'s AI Evaluation Validator</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Validate AI background removal ratings with thumbs up/down feedback</p>', unsafe_allow_html=True)
 
 # Evaluation preview without title (for when title is shown separately)
 def render_evaluation_preview_without_title():
     demo_data = get_demo_data()
     
     for i, pair in enumerate(demo_data):
-        with st.container():
-            col1, col3 = st.columns([2, 2])
-            
-            with col1:
-                st.markdown("**Original**")
-                img = load_image_with_fallback(pair['original'], 150, 120)
-                st.image(img, caption=pair['original'], width=150)
-            
-            with col3:
-                st.markdown("**Processed**")
-                img = load_image_with_fallback(pair['processed'], 150, 120)
-                st.image(img, caption=pair['processed'], width=150)
+        st.markdown('<div class="image-container">', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Original Image**")
+            img = load_image_with_fallback(pair['original'], 150, 120)
+            st.image(img, use_container_width=True)
+        
+        with col2:
+            st.markdown("**Background Removal Result**")
+            img = load_image_with_fallback(pair['processed'], 150, 120)
+            st.image(img, use_container_width=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if i < len(demo_data) - 1:
-            st.divider()
+            st.markdown("---")
 
 # Evaluation preview
 def render_evaluation_preview():
     st.markdown("### 📋 Image Pairs to be Evaluated")
-    demo_data = get_demo_data()
-    
-    for i, pair in enumerate(demo_data):
-        with st.container():
-            col1, col3 = st.columns([2, 2])
-            
-            with col1:
-                st.markdown("**Original**")
-                img = load_image_with_fallback(pair['original'], 150, 120)
-                st.image(img, caption=pair['original'], width=150)
-            
-            with col3:
-                st.markdown("**Processed**")
-                img = load_image_with_fallback(pair['processed'], 150, 120)
-                st.image(img, caption=pair['processed'], width=150)
-        
-        if i < len(demo_data) - 1:
-            st.divider()
+    render_evaluation_preview_without_title()
 
 # AI evaluation simulation
 def simulate_ai_evaluation():
@@ -265,21 +421,34 @@ def simulate_ai_evaluation():
     st.session_state.evaluation_complete = True
     st.rerun()
 
-# Feedback buttons
+# Feedback buttons with improved styling
 def render_feedback_buttons(eval_id):
+    st.markdown('<div class="feedback-buttons">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     
+    current_feedback = st.session_state.human_feedback.get(eval_id)
+    
     with col1:
-        if st.button("👍", key=f"up_{eval_id}", help="Agree with AI rating"):
+        st.markdown('<div class="feedback-button-container thumbs-up">', unsafe_allow_html=True)
+        button_type = "primary" if current_feedback == True else "secondary"
+        if st.button("👍 Agree", key=f"up_{eval_id}", type=button_type, 
+                    help="Agree with AI rating"):
             st.session_state.human_feedback[eval_id] = True
             if eval_id in st.session_state.annotator_ratings:
                 del st.session_state.annotator_ratings[eval_id]
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        if st.button("👎", key=f"down_{eval_id}", help="Disagree with AI rating"):
+        st.markdown('<div class="feedback-button-container thumbs-down">', unsafe_allow_html=True)
+        button_type = "primary" if current_feedback == False else "secondary"
+        if st.button("👎 Disagree", key=f"down_{eval_id}", type=button_type,
+                    help="Disagree with AI rating"):
             st.session_state.human_feedback[eval_id] = False
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Annotator rating input
 def render_annotator_rating(eval_id):
@@ -304,13 +473,23 @@ def render_annotator_rating(eval_id):
         st.info("—")
         return True
 
-# Validation interface
+# Validation interface with improved layout
 def render_validation_interface():
     st.markdown("### ✅ Validate AI Ratings")
     
-    col1, col2 = st.columns([3, 1])
-    with col2:
-        if st.button("🔄 Reset", key="reset_btn"):
+    # Instructions
+    st.markdown("""
+    <div class="criteria-list">
+        <strong>Review each AI evaluation and provide feedback:</strong><br><br>
+        <strong>👍 Agree:</strong> The AI rating accurately reflects the background removal quality<br>
+        <strong>👎 Disagree:</strong> The AI rating does not match your assessment (provide your rating)
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Reset button in top right
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    with col4:
+        if st.button("🔄 Reset", key="reset_btn", type="secondary"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
                        'analysis_results', 'evaluation_complete', 'celebration_shown']:
                 if key in st.session_state:
@@ -318,7 +497,53 @@ def render_validation_interface():
             st.session_state.current_page = 'main'
             st.rerun()
     
-    # Top submit button for easier access (right side with better alignment)
+    # Create evaluation table
+    for eval_data in st.session_state.evaluations:
+        st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
+        
+        col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
+        
+        with col1:
+            st.markdown("**Original**")
+            img = load_image_with_fallback(eval_data['original'], 150, 120)
+            st.image(img, width=120)
+            st.caption(eval_data['original'])
+        
+        with col2:
+            st.markdown("**Processed**")
+            img = load_image_with_fallback(eval_data['processed'], 150, 120)
+            st.image(img, width=120)
+            st.caption(eval_data['processed'])
+        
+        with col3:
+            st.markdown("**AI Rating**")
+            color = get_quality_color(eval_data['rating'])
+            st.markdown(f"""
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="background: {color}; color: white; width: 30px; height: 30px; 
+                            border-radius: 50%; display: flex; align-items: center; 
+                            justify-content: center; font-weight: bold;">
+                    {eval_data['rating']}
+                </div>
+                <span style="font-size: 1.2rem; font-weight: bold;">{eval_data['rating']}/5</span>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown("**Quality Level**")
+            st.write(eval_data['quality'])
+        
+        with col5:
+            st.markdown("**Your Feedback**")
+            render_feedback_buttons(eval_data['id'])
+        
+        with col6:
+            st.markdown("**Your Rating**")
+            render_annotator_rating(eval_data['id'])
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Submit section
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -327,79 +552,27 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-        with col4:
-            if not can_submit:
-                st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
-            
-            if st.button("✨ Submit Responses", disabled=not can_submit, key="submit_btn_top", 
-                        help="Submit all your feedback and ratings"):
+        st.markdown('<div class="submit-section">', unsafe_allow_html=True)
+        
+        if not can_submit:
+            st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
+        else:
+            st.success("✅ All feedback provided! Ready to submit.")
+        
+        st.markdown('<div class="submit-button-right">', unsafe_allow_html=True)
+        col1, col2 = st.columns([3, 1])
+        
+        with col2:
+            if st.button("✨ Submit Responses", disabled=not can_submit, key="submit_btn", 
+                        type="primary", help="Submit all your feedback and ratings"):
                 if can_submit:
                     calculate_analysis()
                     show_celebration()
                     st.session_state.current_page = 'thank_you'
                     st.rerun()
-    
-    st.divider()
-    
-    # Create evaluation table
-    for eval_data in st.session_state.evaluations:
-        with st.container():
-            col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
-            
-            with col1:
-                st.markdown("**Original**")
-                img = load_image_with_fallback(eval_data['original'], 150, 120)
-                st.image(img, width=120)
-                st.caption(eval_data['original'])
-            
-            with col2:
-                st.markdown("**Processed**")
-                img = load_image_with_fallback(eval_data['processed'], 150, 120)
-                st.image(img, width=120)
-                st.caption(eval_data['processed'])
-            
-            with col3:
-                st.markdown("**AI Rating**")
-                color = get_quality_color(eval_data['rating'])
-                st.markdown(f"""
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="background: {color}; color: white; width: 30px; height: 30px; 
-                                border-radius: 50%; display: flex; align-items: center; 
-                                justify-content: center; font-weight: bold;">
-                        {eval_data['rating']}
-                    </div>
-                    <span style="font-size: 1.2rem; font-weight: bold;">{eval_data['rating']}/5</span>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col4:
-                st.markdown("**Quality Level**")
-                st.write(eval_data['quality'])
-            
-            with col5:
-                st.markdown("**Your Feedback**")
-                render_feedback_buttons(eval_data['id'])
-            
-            with col6:
-                st.markdown("**Your Rating**")
-                render_annotator_rating(eval_data['id'])
-            
-            st.divider()
-    
-    # Bottom submit button (right side with better alignment)
-    if st.session_state.human_feedback:
-        thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
-                           if feedback == False]
-        missing_ratings = [id for id in thumbs_down_items 
-                         if id not in st.session_state.annotator_ratings]
         
-        can_submit = len(missing_ratings) == 0
-        
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-        with col4:
-            if not can_submit:
-                st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
+        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Celebration animation
 def show_celebration():
@@ -409,13 +582,6 @@ def show_celebration():
         
         # Show balloons for 3 seconds
         st.balloons()
-        
-        # Brief message
-        message_placeholder = st.empty()
-        for i in range(3):
-            message_placeholder.success(f"🎉 Celebration! Thank you for your evaluation! 🎉")
-            time.sleep(1)
-        message_placeholder.empty()  # Clear the message
 
 # Calculate analysis results
 def calculate_analysis():
@@ -437,78 +603,82 @@ def calculate_analysis():
 # Thank you page
 def render_thank_you_page():
     st.markdown("""
-    <div style="text-align: center; padding: 4rem 2rem;">
-        <div style="background: #f0f9ff; padding: 2rem; border-radius: 15px; 
-                    border: 2px solid #0ea5e9; margin-bottom: 2rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
-            <h1 style="color: #0369a1; margin-bottom: 1rem;">Thank you for your participation!</h1>
-            <p style="font-size: 1.2rem; color: #075985;">
-                Your responses have been recorded successfully.
-            </p>
-        </div>
+    <div class="celebration">
+        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">🎉 Evaluation Complete! 🎉</h1>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Thank you for your participation!</h2>
+        <p style="font-size: 1.1rem;">Your responses have been recorded successfully.</p>
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+    st.markdown('<div class="nav-button-container">', unsafe_allow_html=True)
+    st.markdown('<div class="nav-button-right">', unsafe_allow_html=True)
     
-    with col4:
-        if st.button("📊 View Analysis", key="view_analysis",
-                    help="See detailed analysis of your feedback"):
-            st.session_state.current_page = 'analysis'
-            st.rerun()
+    col1, col2 = st.columns([3, 2])
+    
+    with col2:
+        col_a, col_b = st.columns(2)
         
-        if st.button("🔄 Start New Evaluation", key="new_evaluation",
-                    help="Begin a fresh evaluation session"):
+        with col_a:
+            if st.button("📊 View Analysis", key="view_analysis", type="primary",
+                        help="See detailed analysis of your feedback"):
+                st.session_state.current_page = 'analysis'
+                st.rerun()
+        
+        with col_b:
+            if st.button("🔄 Start New", key="new_evaluation", type="secondary",
+                        help="Begin a fresh evaluation session"):
+                for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
+                           'analysis_results', 'evaluation_complete', 'celebration_shown']:
+                    if key in st.session_state:
+                        del st.session_state[key]
+                st.session_state.current_page = 'main'
+                st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Analysis dashboard
+def render_analysis_dashboard():
+    st.markdown('<h1 class="main-header">Analysis Results</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Human validation feedback analysis</p>', unsafe_allow_html=True)
+    
+    # Reset button
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    with col4:
+        if st.button("🔄 Start New Evaluation", key="new_eval_analysis", type="secondary"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
                        'analysis_results', 'evaluation_complete', 'celebration_shown']:
                 if key in st.session_state:
                     del st.session_state[key]
             st.session_state.current_page = 'main'
             st.rerun()
-
-# Analysis dashboard
-def render_analysis_dashboard():
-    st.markdown("# 📊 Analysis Results")
-    st.markdown("### Human validation feedback analysis")
-    
-    if st.button("🔄 Start New Evaluation", key="new_eval_analysis"):
-        for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
-                   'analysis_results', 'evaluation_complete', 'celebration_shown']:
-            if key in st.session_state:
-                del st.session_state[key]
-        st.session_state.current_page = 'main'
-        st.rerun()
     
     results = st.session_state.analysis_results
     
     # Executive Summary
-    st.markdown("## 📋 Executive Summary")
+    st.markdown("### Executive Summary")
     
-    with st.container():
-        st.info(f"""
-        **Assessment Overview:**
-        We conducted an AI and Human Evaluator assessment with a **{results['agreement_rate']}% agreement rate** 
-        and **{results['disagreement_rate']}% evaluation gap**.
-        """)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.success(f"""
-            **Background Removal Recommendations:**
-            {'Maintain current algorithms, focus on edge cases' if results['agreement_rate'] >= 70 
-             else 'Improve edge detection and segmentation techniques'}
-            """)
-        
-        with col2:
-            st.info(f"""
-            **AI Evaluation Improvements:**
-            {'Fine-tune quality thresholds, ready for production' if results['agreement_rate'] >= 70 
-             else 'Recalibrate scoring weights and evaluation criteria'}
-            """)
+    summary_text = f"""
+    We conducted an AI and Human Evaluator assessment with a **{results['agreement_rate']}% agreement rate** 
+    and **{results['disagreement_rate']}% evaluation gap**.
+    
+    **Background Removal Recommendations:**
+    {'Maintain current algorithms, focus on edge cases' if results['agreement_rate'] >= 70 
+     else 'Improve edge detection and segmentation techniques'}
+    
+    **AI Evaluation Improvements:**
+    {'Fine-tune quality thresholds, ready for production' if results['agreement_rate'] >= 70 
+     else 'Recalibrate scoring weights and evaluation criteria'}
+    """
+    
+    st.markdown(f"""
+    <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin-bottom: 1.5rem;">
+        {summary_text}
+    </div>
+    """, unsafe_allow_html=True)
     
     # Metrics Dashboard
-    st.markdown("## 📈 Validation Summary")
+    st.markdown("### Validation Summary")
     
     col1, col2, col3 = st.columns(3)
     
@@ -537,7 +707,7 @@ def render_analysis_dashboard():
         )
     
     # Visualizations
-    st.markdown("## 📊 Analysis Charts")
+    st.markdown("### Analysis Charts")
     
     col1, col2 = st.columns(2)
     
@@ -560,22 +730,27 @@ def render_analysis_dashboard():
         if st.session_state.evaluations:
             evaluations_df = pd.DataFrame(st.session_state.evaluations)
             rating_counts = evaluations_df.groupby('rating').size().reset_index(name='count')
+            
+            # Create bar chart with consistent colors
+            rating_labels = [f"{i} - {['Unusable', 'Partially Viable', 'Moderately Functional', 'Near Production Ready', 'Production Ready'][i-1]}" for i in rating_counts['rating']]
+            colors = [get_quality_color(i) for i in rating_counts['rating']]
+            
             fig_bar = px.bar(
-                rating_counts,
-                x='rating',
-                y='count',
-                color='rating',
+                x=rating_labels,
+                y=rating_counts['count'],
                 title="AI Rating Distribution",
-                labels={'rating': 'AI Rating', 'count': 'Number of Images'},
-                color_continuous_scale='viridis'
+                labels={'x': 'AI Rating', 'y': 'Number of Images'},
+                color=rating_labels,
+                color_discrete_sequence=colors
             )
+            fig_bar.update_layout(showlegend=False, height=400, title_x=0.5)
             st.plotly_chart(fig_bar, use_container_width=True)
         else:
             st.info("No evaluation data available for bar chart")
     
     # Detailed Analysis
     if results['disagreement_count'] > 0:
-        st.markdown("## 🔍 Disagreement Analysis")
+        st.markdown("### Disagreement Analysis")
         
         disagreements = [(id, st.session_state.annotator_ratings.get(id)) 
                         for id, feedback in st.session_state.human_feedback.items() 
@@ -609,32 +784,6 @@ def render_analysis_dashboard():
     reinforcement learning processes to improve automated evaluation performance.
     """)
 
-# Sidebar
-def render_sidebar():
-    with st.sidebar:
-        st.markdown("### 📋 About")
-        st.markdown("""
-        This application simulates an AI evaluation validation workflow for background removal quality assessment.
-        
-        **Process:**
-        1. AI evaluates image pairs
-        2. Humans validate AI ratings
-        3. Analysis provides insights
-        
-        **Rating Scale:**
-        - 1: Not Viable
-        - 2: Partially Viable  
-        - 3: Moderately Functional
-        - 4: Near Production Ready
-        - 5: Production Ready
-        """)
-        
-        # Only show back button if not on main page
-        if st.session_state.get('current_page', 'main') != 'main':
-            if st.button("🏠 Back to Main", key="home_btn"):
-                st.session_state.current_page = 'main'
-                st.rerun()
-
 # Main application logic
 def main():
     # Initialize session state FIRST before anything else
@@ -646,12 +795,24 @@ def main():
     # Navigation logic
     if st.session_state.current_page == 'main':
         if not st.session_state.evaluation_complete:
+            # Instructions
+            st.markdown("""
+            <div class="criteria-list">
+                <strong>AI Background Removal Evaluation Validator</strong><br><br>
+                This tool simulates an AI evaluation system that automatically assesses background removal quality, 
+                followed by human validation to improve the AI's accuracy. The process includes:<br><br>
+                <strong>1. AI Evaluation:</strong> Automated assessment of background removal results<br>
+                <strong>2. Human Validation:</strong> Review and validate AI ratings with thumbs up/down feedback<br>
+                <strong>3. Analysis:</strong> Compare human vs AI assessments to improve the system
+            </div>
+            """, unsafe_allow_html=True)
+            
             # Put title and button on the same row
             col1, col2 = st.columns([2, 1])
             with col1:
                 st.markdown("### 📋 Image Pairs to be Evaluated")
             with col2:
-                if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval",
+                if st.button("🧠 Start AI Evaluation", key="start_eval", type="primary",
                             help="Begin the automated evaluation process"):
                     simulate_ai_evaluation()
             
@@ -660,6 +821,14 @@ def main():
             
             # Now show the preview (without the title since it's already shown above)
             render_evaluation_preview_without_title()
+            
+            # Note at the bottom
+            st.markdown("""
+            <div class="note-box">
+                <small><strong>Note:</strong> This is a demonstration of AI-human collaboration in quality assessment. 
+                The AI will first evaluate all image pairs, then you'll validate those evaluations.</small>
+            </div>
+            """, unsafe_allow_html=True)
         else:
             render_validation_interface()
     
@@ -668,9 +837,6 @@ def main():
     
     elif st.session_state.current_page == 'analysis':
         render_analysis_dashboard()
-    
-    # Render sidebar
-    render_sidebar()
 
 
 if __name__ == "__main__":
