@@ -314,13 +314,6 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        # Create a clean submit section at the top
-        st.markdown("""
-        <div class="submit-button-section">
-            <h4 style="margin-bottom: 1rem; color: #667eea;">Submit Your Evaluation</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
         col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
         with col4:
             if not can_submit:
