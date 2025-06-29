@@ -441,7 +441,7 @@ else:
     with col2:
         st.write("") 
     
-    with col2:
+    with col3:
         if st.button("🔄 Reset", use_container_width=True):
             start_new_evaluation()
 
