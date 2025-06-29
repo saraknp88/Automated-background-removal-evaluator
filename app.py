@@ -463,6 +463,7 @@ else:
     st.markdown("---")
     
     # Single image evaluation interface
+    # Single image evaluation interface
     col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
     
     with col1:
@@ -510,12 +511,12 @@ else:
         """, unsafe_allow_html=True)
     
     with col4:
-         st.markdown("**Quality Level**")
-         st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
-
+        st.markdown("**Quality Level**")
+        st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
+    
     with col5:
-       st.markdown("<span style='color: #2563eb; font-weight: 600;'>Annotator Feedback</span>", unsafe_allow_html=True)
-       col_up, col_down = st.columns(2)
+        st.markdown("**Annotator Feedback**")
+        col_up, col_down = st.columns(2)
         
         with col_up:
             thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
@@ -551,7 +552,7 @@ else:
             st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
         else:
             st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
-    
+        
     # Show modals if triggered
     if st.session_state.get(f'show_modal_{eval_id}_orig', False):
         with st.container():
