@@ -250,13 +250,7 @@ def submit_responses():
         'disagreement_count': disagreement_count
     }
     st.session_state.show_thank_you = True
-    
-    # Show balloons after state change
-    st.balloons()
-    time.sleep(0.5)  # Brief delay
     st.rerun()
-
-
 
 def start_new_evaluation():
     st.session_state.evaluations = DEMO_RESULTS
@@ -409,41 +403,23 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
 
 # Thank You Page
 elif st.session_state.show_thank_you:
-   # Custom celebration banner
-   st.markdown("""
-   <div style="
-       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-       border-radius: 1rem;
-       padding: 3rem 2rem;
-       text-align: center;
-       color: white;
-       margin: 2rem 0;
-       box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-   ">
-       <h1 style="margin: 0; font-size: 2.5rem; font-weight: bold;">
-           🎉 Evaluation Complete! 🎉
-       </h1>
-       <h2 style="margin: 1rem 0 0.5rem 0; font-size: 1.5rem; font-weight: normal;">
-           Thank you for your participation!
-       </h2>
-       <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.9;">
-           Your responses have been recorded successfully.
-       </p>
-   </div>
-   """, unsafe_allow_html=True)
-   
-   # Action buttons
-   col1, col2 = st.columns(2)
-   
-   with col1:
-       if st.button("📊 View Analysis", type="primary", use_container_width=True):
-           st.session_state.show_thank_you = False
-           st.session_state.show_analysis = True
-           st.rerun()
-   
-   with col2:
-       if st.button("🔄 Start New Evaluation", use_container_width=True):
-           start_new_evaluation()
+    st.markdown('<div class="thank-you-container">', unsafe_allow_html=True)
+    st.markdown('<div class="success-icon">✓</div>', unsafe_allow_html=True)
+    st.markdown("# Thank you for your participation!")
+    st.markdown("### Your responses have been recorded successfully.")
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("📊 View Analysis", type="primary", use_container_width=True):
+                st.session_state.show_thank_you = False
+                st.session_state.show_analysis = True
+                st.rerun()
+        with col_b:
+            if st.button("🔄 Start New Evaluation", use_container_width=True):
+                start_new_evaluation()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Main Application - Single Image View
 else:
@@ -453,7 +429,7 @@ else:
     # Instructions
     st.markdown("""
     <div class="instructions-box">
-        <strong>Hello! I'm Sara's AI Judge for Background Removal. I use the evaluation rubric below to assess the quality of background-removed images. As you review the automated ratings, please apply the same criteria.</strong><br><br>
+        <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
         <strong>💡 Tip:</strong> Click the 🔍 button next to each image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
@@ -494,10 +470,10 @@ else:
             st.session_state[f'show_modal_{eval_id}_orig'] = True
         
         try:
-            st.image(current_eval['original'], width=180)
+            st.image(current_eval['original'], width=120)
         except:
             st.markdown(f"""
-            <div style="width: 180px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
                  display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                 <div style="text-align: center; color: #6b7280;">
                     <div>🖼️</div>
@@ -512,10 +488,10 @@ else:
             st.session_state[f'show_modal_{eval_id}_proc'] = True
         
         try:
-            st.image(current_eval['processed'], width=180)
+            st.image(current_eval['processed'], width=120)
         except:
             st.markdown(f"""
-            <div style="width: 180px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
                  display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                 <div style="text-align: center; color: #6b7280;">
                     <div>🖼️</div>
@@ -604,56 +580,49 @@ else:
                     st.session_state[f'show_modal_{eval_id}_proc'] = False
                     st.rerun()
     
-# Check if current image has feedback and required rating
-current_has_feedback = eval_id in st.session_state.human_feedback
-current_feedback_is_negative = st.session_state.human_feedback.get(eval_id) is False
-current_has_rating = eval_id in st.session_state.annotator_ratings
-
-# Determine if user can proceed
-can_proceed = (current_has_feedback and 
-              (not current_feedback_is_negative or current_has_rating))
-
-# Create navigation without progress bar
-col1, col2, col3 = st.columns([1, 3, 1])
-
-with col1:
-    if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
-        previous_image()
-with col2:
-    st.write("")  # Empty space
+    # Bottom navigation
+    st.markdown("---")
     
-with col3:
-    if current_position < total_images:
-        # Disable Next button if no feedback provided OR thumbs down without rating
-        next_help = ""
-        if not current_has_feedback:
-            next_help = "Please provide feedback (👍 or 👎) before proceeding"
-        elif current_feedback_is_negative and not current_has_rating:
-            next_help = "Please provide your rating before proceeding"
+    # Check if current image has feedback
+    current_has_feedback = eval_id in st.session_state.human_feedback
+    
+    # Create navigation with progress bar in center
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
+    
+    with col1:
+        if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
+            previous_image()
+    
+    with col2:
+        st.write("")  # Empty space
+    
+    #with col3:
+        # Progress bar in center
+      #  progress = current_position / total_images
+      #  st.progress(progress, text=f"Progress: {current_position}/{total_images}")
+    
+    with col4:
+        st.write("")  # Empty space
+    
+    with col5:
+        if current_position < total_images:
+            # Disable Next button if no feedback provided for current image
+            next_disabled = not current_has_feedback
+            next_help = "Please provide feedback (👍 or 👎) before proceeding" if next_disabled else "Go to next image"
+            
+            if st.button("Next →", disabled=next_disabled, type="primary", help=next_help, use_container_width=True):    
+                next_image()
         else:
-            next_help = "Go to next image"
-        
-        if st.button("Next →", disabled=not can_proceed, help=next_help, use_container_width=True):
-            next_image()
-    else:
-        # Submit button logic - check all images have required feedback/ratings
-        all_images_complete = True
-        for img_eval_id in [e['id'] for e in st.session_state.evaluations]:
-            if img_eval_id not in st.session_state.human_feedback:
-                all_images_complete = False
-                break
-            if (st.session_state.human_feedback[img_eval_id] is False and 
-                img_eval_id not in st.session_state.annotator_ratings):
-                all_images_complete = False
-                break
-        
-        submit_help = "Complete all required ratings before submitting" if not all_images_complete else "Submit all responses"
-        
-        if st.button("Submit", type="primary", disabled=not all_images_complete, help=submit_help, use_container_width=True):
-            submit_responses()
-
-# Show appropriate feedback message
-if not current_has_feedback:
-    st.info("👆 Please provide your feedback (👍 agree or 👎 disagree) to proceed to the next image.")
-elif current_feedback_is_negative and not current_has_rating:
-    st.warning("👆 Since you disagreed with the AI rating, please provide your own rating before proceeding.")
+            # Submit button on last image - also requires feedback
+            thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
+            missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
+            can_submit = len(missing_ratings) == 0 and len(st.session_state.human_feedback) == total_images
+            
+            submit_help = "All images must have feedback before submitting" if not can_submit else "Submit all responses"
+            
+            if st.button("✨ Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
+                submit_responses()
+    
+    # Show feedback requirement message if no feedback provided
+    if not current_has_feedback:
+        st.info("👆 Please provide your feedback (👍 agree or 👎 disagree) to proceed to the next image.")
