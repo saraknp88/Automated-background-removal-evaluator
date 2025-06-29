@@ -638,7 +638,7 @@ elif st.session_state.show_thank_you:
 # Main Application - Validate AI Ratings (Landing Page)
 else:
     # Header
-    st.markdown('<h1 class="instructions-title">Sara's AI Judge for Background Removal</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="instructions-title">Sara\'s AI Judge for Background Removal</h1>', unsafe_allow_html=True)
     
     # Instructions with magnification tip
     st.markdown("""
