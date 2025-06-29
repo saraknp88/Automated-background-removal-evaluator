@@ -415,6 +415,8 @@ if 'show_thank_you' not in st.session_state:
     st.session_state.show_thank_you = False
 if 'show_analysis' not in st.session_state:
     st.session_state.show_analysis = False
+if 'current_image_index' not in st.session_state:
+    st.session_state.current_image_index = 0
 
 # Demo data - automatically loaded on first run
 DEMO_RESULTS = [
@@ -503,6 +505,17 @@ def start_new_evaluation():
     st.session_state.analysis_results = None
     st.session_state.show_thank_you = False
     st.session_state.show_analysis = False
+    st.session_state.current_image_index = 0
+    st.rerun()
+
+def next_image():
+    if st.session_state.current_image_index < len(st.session_state.evaluations) - 1:
+        st.session_state.current_image_index += 1
+    st.rerun()
+
+def previous_image():
+    if st.session_state.current_image_index > 0:
+        st.session_state.current_image_index -= 1
     st.rerun()
 
 # Analysis Results Page
