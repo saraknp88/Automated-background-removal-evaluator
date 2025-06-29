@@ -382,9 +382,9 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
         st.markdown("</div>", unsafe_allow_html=True)
     
     # Action buttons
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     
-    with col2:
+    with col3:
         if st.button("🔄 Start New Evaluation", type="primary", use_container_width=True):
             start_new_evaluation()
             st.rerun()
