@@ -88,7 +88,8 @@ def initialize_session_state():
         'annotator_ratings': {},
         'analysis_results': None,
         'current_page': 'main',
-        'evaluation_complete': False
+        'evaluation_complete': False,
+        'celebration_shown': False
     }
     
     for key, default_value in defaults.items():
@@ -280,13 +281,13 @@ def render_validation_interface():
     with col2:
         if st.button("🔄 Reset", key="reset_btn"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
-                       'analysis_results', 'evaluation_complete']:
+                       'analysis_results', 'evaluation_complete', 'celebration_shown']:
                 if key in st.session_state:
                     del st.session_state[key]
             st.session_state.current_page = 'main'
             st.rerun()
     
-    # Top submit button for easier access
+    # Top submit button for easier access (right side)
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -295,8 +296,8 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        col1, col2, col3 = st.columns([2, 1, 1])
-        with col1:
+        col1, col2, col3 = st.columns([1, 1, 2])
+        with col3:
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
             
@@ -354,7 +355,7 @@ def render_validation_interface():
             
             st.divider()
     
-    # Bottom submit button
+    # Bottom submit button (right side)
     if st.session_state.human_feedback:
         thumbs_down_items = [id for id, feedback in st.session_state.human_feedback.items() 
                            if feedback == False]
@@ -363,8 +364,8 @@ def render_validation_interface():
         
         can_submit = len(missing_ratings) == 0
         
-        col1, col2, col3 = st.columns([2, 1, 1])
-        with col1:
+        col1, col2, col3 = st.columns([1, 1, 2])
+        with col3:
             if not can_submit:
                 st.error(f"⚠️ Please provide ratings for {len(missing_ratings)} thumbs down items")
             
@@ -377,19 +378,19 @@ def render_validation_interface():
 
 # Celebration animation
 def show_celebration():
-    st.markdown("""
-    <div class="celebration">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-        <h2>Fantastic!</h2>
-        <p style="font-size: 1.2rem;">Thank you for your evaluation!</p>
-        <div style="margin-top: 1rem;">
-            <span style="font-size: 2rem;">⭐</span>
-            <span style="font-size: 2rem;">⭐</span>
-            <span style="font-size: 2rem;">⭐</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    time.sleep(2)
+    # Create a brief fireworks effect using Streamlit's built-in features
+    if 'celebration_shown' not in st.session_state:
+        st.session_state.celebration_shown = True
+        
+        # Show balloons for 3 seconds
+        st.balloons()
+        
+        # Brief message
+        message_placeholder = st.empty()
+        for i in range(3):
+            message_placeholder.success(f"🎉 Celebration! Thank you for your evaluation! 🎉")
+            time.sleep(1)
+        message_placeholder.empty()  # Clear the message
 
 # Calculate analysis results
 def calculate_analysis():
@@ -423,17 +424,18 @@ def render_thank_you_page():
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([2, 1, 1])
+    col1, col2, col3 = st.columns([1, 1, 2])
     
-    with col1:
+    with col3:
         if st.button("📊 View Analysis", key="view_analysis"):
             st.session_state.current_page = 'analysis'
             st.rerun()
-    
-    with col2:
+        
+        st.write("")  # Add some spacing
+        
         if st.button("🔄 Start New Evaluation", key="new_evaluation"):
             for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
-                       'analysis_results', 'evaluation_complete']:
+                       'analysis_results', 'evaluation_complete', 'celebration_shown']:
                 if key in st.session_state:
                     del st.session_state[key]
             st.session_state.current_page = 'main'
@@ -446,7 +448,7 @@ def render_analysis_dashboard():
     
     if st.button("🔄 Start New Evaluation", key="new_eval_analysis"):
         for key in ['evaluations', 'human_feedback', 'annotator_ratings', 
-                   'analysis_results', 'evaluation_complete']:
+                   'analysis_results', 'evaluation_complete', 'celebration_shown']:
             if key in st.session_state:
                 del st.session_state[key]
         st.session_state.current_page = 'main'
@@ -621,8 +623,8 @@ def main():
         if not st.session_state.evaluation_complete:
             render_evaluation_preview()
             
-            col1, col2, col3 = st.columns([2, 1, 1])
-            with col1:
+            col1, col2, col3 = st.columns([1, 1, 2])
+            with col3:
                 if st.button("🧠 Start AI Evaluation (5 demo pairs)", key="start_eval"):
                     simulate_ai_evaluation()
         else:
