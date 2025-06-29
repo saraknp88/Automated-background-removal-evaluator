@@ -386,10 +386,11 @@ if st.session_state.show_analysis and st.session_state.analysis_results:
         
         st.markdown("</div>", unsafe_allow_html=True)
 
- col1, col2 = st.columns(2)
+ 
+col1, col2 = st.columns(2)
     
-    with col2:
-        if st.button("🔄 Start New Evaluation", type="secondary"):
+with col2:
+    if st.button("🔄 Start New Evaluation", type="secondary"):
             reset_evaluation()
             st.rerun()
 
