@@ -418,42 +418,47 @@ if 'show_analysis' not in st.session_state:
 if 'current_image_index' not in st.session_state:
     st.session_state.current_image_index = 0
 
-# Demo data - automatically loaded on first run
+# Demo data - updated with descriptions
 DEMO_RESULTS = [
     {
         'id': 1, 
         'original': 'Before 0.jpg',
         'processed': 'After 0.png',
         'rating': 4, 
-        'quality': 'Near Production Ready'
+        'quality': 'Near Production Ready',
+        'description': 'Business Attire'
     },
     {
         'id': 2, 
         'original': 'Before 01.jpg',
         'processed': 'After 01.png',
         'rating': 3, 
-        'quality': 'Moderately Functional'
+        'quality': 'Moderately Functional',
+        'description': 'Professional Portrait'
     },
     {
         'id': 3, 
         'original': 'Before 02.jpg',
         'processed': 'After 02.png',
         'rating': 4, 
-        'quality': 'Near Production Ready'
+        'quality': 'Near Production Ready',
+        'description': 'Casual Headshot'
     },
     {
         'id': 4, 
         'original': 'Before 03.jpg',
         'processed': 'After 03.png',
         'rating': 5, 
-        'quality': 'Production Ready'
+        'quality': 'Production Ready',
+        'description': 'Studio Portrait'
     },
     {
         'id': 5, 
         'original': 'Before 04.jpg',
         'processed': 'After 04.png',
         'rating': 2, 
-        'quality': 'Partially Viable'
+        'quality': 'Partially Viable',
+        'description': 'Group Photo'
     }
 ]
 
