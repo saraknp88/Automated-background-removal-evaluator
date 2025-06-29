@@ -169,36 +169,36 @@ if 'is_evaluating' not in st.session_state:
 DEMO_RESULTS = [
     {
         'id': 1, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%200.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%200.png',
+        'original': 'Before 0.jpg',
+        'processed': 'After 0.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 2, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2001.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2001.png',
+        'original': 'Before 01.jpg',
+        'processed': 'After 01.png',
         'rating': 3, 
         'quality': 'Moderately Functional'
     },
     {
         'id': 3, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2002.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2002.png',
+        'original': 'Before 02.jpg',
+        'processed': 'After 02.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 4, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2003.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2003.png',
+        'original': 'Before 03.jpg',
+        'processed': 'After 03.png',
         'rating': 5, 
         'quality': 'Production Ready'
     },
     {
         'id': 5, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2004.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2004.png',
+        'original': 'Before 04.jpg',
+        'processed': 'After 04.png',
         'rating': 2, 
         'quality': 'Partially Viable'
     }
