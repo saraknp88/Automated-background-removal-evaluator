@@ -401,8 +401,8 @@ else:
         
         <div style="margin-left: 1rem;">
             <p style="margin: 0.5rem 0; color: #374151;"><strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>2 - Ideation Stage:</strong> Useful as a concept or direction, but not for final use. Significant fixes are required to correct anatomy, object details, aberrations, etc.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>3 - Production Acceleration:</strong> Largely usable, with moderate fixes needed to improve details. More efficient than starting from scratch.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes are required to correct anatomy, object details, aberrations, etc.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>3 - Moderately Functional:</strong> Largely usable, with moderate fixes needed to improve details. More efficient than starting from scratch.</p>
             <p style="margin: 0.5rem 0; color: #374151;"><strong>4 - Near Production Ready:</strong> Only minor adjustments needed, such as light cleanup or retouching.</p>
             <p style="margin: 0.5rem 0; color: #374151;"><strong>5 - Production Ready:</strong> No further edits needed. Ready for immediate use.</p>
         </div>
