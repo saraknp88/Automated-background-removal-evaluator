@@ -671,25 +671,19 @@ else:
         
         with col1:
             st.markdown("**Original**")
-            # Use custom magnifiable image HTML
-            st.markdown(
-                create_magnifiable_image(
-                    eval_data['original'], 
-                    f"Original Image {eval_id}"
-                ), 
-                unsafe_allow_html=True
-            )
+            # Use expandable image viewer
+            with st.expander("🔍 View Full Size", expanded=False):
+                st.image(eval_data['original'], caption=f"Original Image {eval_id}", use_container_width=True)
+            # Small preview
+            st.image(eval_data['original'], width=120)
         
         with col2:
             st.markdown("**Processed**")
-            # Use custom magnifiable image HTML
-            st.markdown(
-                create_magnifiable_image(
-                    eval_data['processed'], 
-                    f"Processed Image {eval_id} - {eval_data['quality']}"
-                ), 
-                unsafe_allow_html=True
-            )
+            # Use expandable image viewer
+            with st.expander("🔍 View Full Size", expanded=False):
+                st.image(eval_data['processed'], caption=f"Processed Image {eval_id} - {eval_data['quality']}", use_container_width=True)
+            # Small preview
+            st.image(eval_data['processed'], width=120)
         
         with col3:
             st.markdown("**AI Rating**")
