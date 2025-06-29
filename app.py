@@ -494,10 +494,10 @@ else:
             st.session_state[f'show_modal_{eval_id}_orig'] = True
         
         try:
-            st.image(current_eval['original'], width=120)
+            st.image(current_eval['original'], width=180)
         except:
             st.markdown(f"""
-            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+            <div style="width: 180px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
                  display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                 <div style="text-align: center; color: #6b7280;">
                     <div>🖼️</div>
@@ -512,10 +512,10 @@ else:
             st.session_state[f'show_modal_{eval_id}_proc'] = True
         
         try:
-            st.image(current_eval['processed'], width=120)
+            st.image(current_eval['processed'], width=180)
         except:
             st.markdown(f"""
-            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+            <div style="width: 180px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
                  display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                 <div style="text-align: center; color: #6b7280;">
                     <div>🖼️</div>
