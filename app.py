@@ -567,26 +567,47 @@ else:
     
     # Bottom navigation
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    # Check if current image has feedback
+    current_has_feedback = eval_id in st.session_state.human_feedback
+    
+    # Create navigation with progress bar in center
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
     
     with col1:
         if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
             previous_image()
     
     with col2:
-        # Progress bar
+        st.write("")  # Empty space
+    
+    with col3:
+        # Progress bar in center
         progress = current_position / total_images
         st.progress(progress, text=f"Progress: {current_position}/{total_images}")
     
-    with col3:
+    with col4:
+        st.write("")  # Empty space
+    
+    with col5:
         if current_position < total_images:
-            if st.button("Next →", use_container_width=True):
+            # Disable Next button if no feedback provided for current image
+            next_disabled = not current_has_feedback
+            next_help = "Please provide feedback (👍 or 👎) before proceeding" if next_disabled else "Go to next image"
+            
+            if st.button("Next →", disabled=next_disabled, help=next_help, use_container_width=True):
                 next_image()
         else:
-            # Submit button on last image
+            # Submit button on last image - also requires feedback
             thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
             missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
-            can_submit = len(missing_ratings) == 0 and len(st.session_state.human_feedback) > 0
+            can_submit = len(missing_ratings) == 0 and len(st.session_state.human_feedback) == total_images
             
-            if st.button("Submit", type="primary", disabled=not can_submit, use_container_width=True):
+            submit_help = "All images must have feedback before submitting" if not can_submit else "Submit all responses"
+            
+            if st.button("Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
                 submit_responses()
+    
+    # Show feedback requirement message if no feedback provided
+    if not current_has_feedback:
+        st.info("👆 Please provide your feedback (👍 agree or 👎 disagree) to proceed to the next image.")
