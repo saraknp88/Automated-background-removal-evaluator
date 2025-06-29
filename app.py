@@ -169,36 +169,36 @@ if 'is_evaluating' not in st.session_state:
 DEMO_RESULTS = [
     {
         'id': 1, 
-        'original': 'Before 0.jpg',
-        'processed': 'After 0.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%200.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%200.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 2, 
-        'original': 'Before 01.jpg',
-        'processed': 'After 01.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2001.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2001.png',
         'rating': 3, 
         'quality': 'Moderately Functional'
     },
     {
         'id': 3, 
-        'original': 'Before 02.jpg',
-        'processed': 'After 02.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2002.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2002.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 4, 
-        'original': 'Before 03.jpg',
-        'processed': 'After 03.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2003.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2003.png',
         'rating': 5, 
         'quality': 'Production Ready'
     },
     {
         'id': 5, 
-        'original': 'Before 04.jpg',
-        'processed': 'After 04.png',
+        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2004.jpg',
+        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2004.png',
         'rating': 2, 
         'quality': 'Partially Viable'
     }
@@ -393,19 +393,38 @@ else:
     </div>
     """, unsafe_allow_html=True)
     
+    # Evaluation Rubric
+    st.markdown("""
+    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6; margin-bottom: 2rem;">
+        <h3 style="color: #1f2937; margin-bottom: 1rem;">Evaluation Rubric</h3>
+        <p style="color: #374151; margin-bottom: 1rem;">We followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings:</p>
+        
+        <div style="margin-left: 1rem;">
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>2 - Ideation Stage:</strong> Useful as a concept or direction, but not for final use. Significant fixes are required to correct anatomy, object details, aberrations, etc.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>3 - Production Acceleration:</strong> Largely usable, with moderate fixes needed to improve details. More efficient than starting from scratch.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>4 - Near Production Ready:</strong> Only minor adjustments needed, such as light cleanup or retouching.</p>
+            <p style="margin: 0.5rem 0; color: #374151;"><strong>5 - Production Ready:</strong> No further edits needed. Ready for immediate use.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Show demo results before evaluation
     if not st.session_state.evaluations and not st.session_state.is_evaluating:
         st.markdown("## Image Pairs to be Evaluated")
         
         for i, pair in enumerate(DEMO_RESULTS):
             st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-            col1, col2 = st.columns([3, 3])
+            col1, col2, col3, col4 = st.columns([2, 1, 2, 3])
             
             with col1:
                 st.markdown("**Original**")
                 st.image(pair['original'], width=200)
             
             with col2:
+                st.markdown("<div style='text-align: center; padding-top: 50px; font-size: 2rem; color: #6b7280;'>→</div>", unsafe_allow_html=True)
+            
+            with col3:
                 st.markdown("**Processed**")
                 st.image(pair['processed'], width=200)
             
