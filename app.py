@@ -163,243 +163,7 @@ st.markdown("""
         color: #1f2937;
         margin-bottom: 1rem;
     }
-
-    /* Image Magnification Styles */
-    .image-container {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-    
-    .image-container:hover {
-        transform: scale(1.05);
-        z-index: 10;
-        border-radius: 8px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-    
-    .magnify-image {
-        width: 120px;
-        height: auto;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-    
-    .magnify-image:hover {
-        border: 2px solid #3b82f6;
-        transform: scale(1.1);
-    }
-    
-    /* Click to enlarge styles */
-    .clickable-image {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        position: relative;
-    }
-    
-    .clickable-image::after {
-        content: "🔍";
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 2px 6px;
-        border-radius: 50%;
-        font-size: 12px;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-    }
-    
-    .clickable-image:hover::after {
-        opacity: 1;
-    }
-    
-    /* Modal styles for enlarged image */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
-        animation: fadeIn 0.3s;
-        overflow: auto;
-    }
-    
-    .modal-content {
-        display: block;
-        margin: 50px auto;
-        min-width: 300px;
-        min-height: 300px;
-        max-width: 95%;
-        max-height: 90%;
-        border-radius: 8px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        cursor: zoom-in;
-        transition: transform 0.3s ease;
-    }
-    
-    .modal-content.zoomed {
-        transform: scale(2);
-        cursor: zoom-out;
-    }
-    
-    .modal-content:hover {
-        transform: scale(1.1);
-    }
-    
-    .modal-content.zoomed:hover {
-        transform: scale(2.2);
-    }
-    
-    .close {
-        position: absolute;
-        top: 20px;
-        right: 35px;
-        color: #fff;
-        font-size: 40px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        z-index: 1001;
-    }
-    
-    .close:hover {
-        color: #ccc;
-        transform: scale(1.2);
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    /* Image caption in modal */
-    .modal-caption {
-        text-align: center;
-        color: white;
-        padding: 10px 0;
-        font-size: 16px;
-        margin-top: 10px;
-    }
-    
-    /* Zoom instructions */
-    .zoom-instructions {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 10px 20px;
-        border-radius: 20px;
-        font-size: 14px;
-        opacity: 0.8;
-        transition: opacity 0.3s;
-    }
 </style>
-
-<!-- Modal for enlarged images -->
-<div id="imageModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage">
-    <div class="modal-caption" id="modalCaption"></div>
-    <div class="zoom-instructions">Click image to zoom • Scroll to zoom • Click outside to close</div>
-</div>
-
-<script>
-// JavaScript for image magnification modal
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const modalCaption = document.getElementById('modalCaption');
-    const closeBtn = document.getElementsByClassName('close')[0];
-    const zoomInstructions = document.querySelector('.zoom-instructions');
-    
-    let isZoomed = false;
-    let scale = 1;
-    
-    // Function to open modal
-    window.openImageModal = function(src, caption) {
-        modal.style.display = 'block';
-        modalImg.src = src;
-        modalCaption.innerHTML = caption;
-        isZoomed = false;
-        scale = 1;
-        modalImg.classList.remove('zoomed');
-        modalImg.style.transform = 'scale(1)';
-        
-        // Show zoom instructions briefly
-        zoomInstructions.style.opacity = '1';
-        setTimeout(() => {
-            zoomInstructions.style.opacity = '0.8';
-        }, 3000);
-    }
-    
-    // Click to zoom functionality
-    modalImg.onclick = function(event) {
-        event.stopPropagation();
-        if (!isZoomed) {
-            scale = 2;
-            modalImg.classList.add('zoomed');
-            modalImg.style.transform = 'scale(' + scale + ')';
-            isZoomed = true;
-        } else {
-            scale = 1;
-            modalImg.classList.remove('zoomed');
-            modalImg.style.transform = 'scale(1)';
-            isZoomed = false;
-        }
-    }
-    
-    // Scroll to zoom functionality
-    modalImg.addEventListener('wheel', function(event) {
-        event.preventDefault();
-        const delta = event.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.min(Math.max(0.5, scale + delta), 4);
-        modalImg.style.transform = 'scale(' + scale + ')';
-        
-        if (scale > 1) {
-            modalImg.classList.add('zoomed');
-            isZoomed = true;
-        } else {
-            modalImg.classList.remove('zoomed');
-            isZoomed = false;
-        }
-    });
-    
-    // Close modal when clicking the X
-    if (closeBtn) {
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-        }
-    }
-    
-    // Close modal when clicking outside the image
-    modal.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    }
-    
-    // Close modal with escape key
-    document.onkeydown = function(event) {
-        if (event.key === 'Escape') {
-            modal.style.display = 'none';
-        }
-    }
-    
-    // Prevent modal from closing when clicking on image
-    modalImg.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-});
-</script>
 """, unsafe_allow_html=True)
 
 # Initialize session state
@@ -469,21 +233,6 @@ if not st.session_state.evaluations:
 def get_quality_color(rating: int) -> str:
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
-
-def create_clickable_image_placeholder(image_path: str, caption: str, eval_id: int, image_type: str) -> str:
-    """Create a clickable image placeholder that opens modal when clicked"""
-    return f"""
-    <div class="image-container clickable-image" onclick="openImageModal('{image_path}', '{caption}')">
-        <div class="magnify-image" style="width: 120px; height: 80px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); 
-             border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; 
-             border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
-            <div style="text-align: center; color: #6b7280;">
-                <div style="font-size: 24px; margin-bottom: 4px;">🖼️</div>
-                <div style="font-size: 10px; font-weight: 500;">{image_type} {eval_id}</div>
-            </div>
-        </div>
-    </div>
-    """
 
 def submit_responses():
     feedback_count = len(st.session_state.human_feedback)
@@ -660,16 +409,16 @@ elif st.session_state.show_thank_you:
                 start_new_evaluation()
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Main Application - Validate AI Ratings (Landing Page)
+# Main Application - Single Image View
 else:
     # Header
     st.markdown('<h1 class="instructions-title">Sara\'s AI Judge for Background Removal</h1>', unsafe_allow_html=True)
     
-    # Instructions with magnification tip
+    # Instructions
     st.markdown("""
     <div class="instructions-box">
         <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images. Rate each image from 1 to 5 based on edge quality, artifact removal, and professional appearance:</strong><br><br>
-        <strong>💡 Tip:</strong> Hover over images to see a preview magnification, or click on any image to view it full screen. In the modal, click the image again to zoom 2x, use mouse wheel to zoom up to 4x, or click outside to close.<br><br>
+        <strong>💡 Tip:</strong> Click the 🔍 button next to each image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
         <strong>3 - Moderately Functional:</strong> Largely usable, with moderate fixes needed. More efficient than starting from scratch.<br>
@@ -678,169 +427,166 @@ else:
     </div>
     """, unsafe_allow_html=True)
     
-    # Validation interface
-    col1, col2 = st.columns([3, 1])
+    # Get current image data
+    current_eval = st.session_state.evaluations[st.session_state.current_image_index]
+    eval_id = current_eval['id']
+    total_images = len(st.session_state.evaluations)
+    current_position = st.session_state.current_image_index + 1
+    validated_count = len(st.session_state.human_feedback)
+    
+    # Top navigation bar
+    col1, col2, col3 = st.columns([1, 3, 1])
     with col1:
-        st.markdown("## Validate AI Ratings")
-    with col2:
         if st.button("🔄 Reset", use_container_width=True):
             start_new_evaluation()
+    with col2:
+        st.markdown(f"<h2 style='text-align: center; margin: 0;'>Image {current_position} of {total_images}: {current_eval['description']}</h2>", unsafe_allow_html=True)
+    with col3:
+        st.markdown(f"<div style='text-align: center; padding-top: 10px;'><strong>{validated_count}/{total_images} validated</strong></div>", unsafe_allow_html=True)
     
-    # Create evaluation table
-    for eval_data in st.session_state.evaluations:
-        eval_id = eval_data['id']
+    st.markdown("---")
+    
+    # Single image evaluation interface
+    col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
+    
+    with col1:
+        st.markdown("**Original**")
+        if st.button(f"🔍", key=f"orig_{eval_id}", help="Click to magnify image"):
+            st.session_state[f'show_modal_{eval_id}_orig'] = True
         
-        st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-        
-        col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
-        
-        with col1:
-            st.markdown("**Original**")
-            # Use Streamlit's native image with a clickable button overlay
-            if st.button(f"🔍", key=f"orig_{eval_id}", help="Click to magnify image"):
-                # Store which image to show in session state
-                st.session_state[f'show_modal_{eval_id}_orig'] = True
-            
-            # Show the actual image using Streamlit
-            try:
-                st.image(eval_data['original'], width=120, caption=f"Original {eval_id}")
-            except:
-                # Fallback if image doesn't exist
-                st.markdown(f"""
-                <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
-                     display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                    <div style="text-align: center; color: #6b7280;">
-                        <div>🖼️</div>
-                        <small>Original {eval_id}</small>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with col2:
-            st.markdown("**Processed**")
-            # Use Streamlit's native image with a clickable button overlay
-            if st.button(f"🔍", key=f"proc_{eval_id}", help="Click to magnify image"):
-                # Store which image to show in session state
-                st.session_state[f'show_modal_{eval_id}_proc'] = True
-            
-            # Show the actual image using Streamlit
-            try:
-                st.image(eval_data['processed'], width=120, caption=f"Processed {eval_id}")
-            except:
-                # Fallback if image doesn't exist
-                st.markdown(f"""
-                <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
-                     display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                    <div style="text-align: center; color: #6b7280;">
-                        <div>🖼️</div>
-                        <small>Processed {eval_id}</small>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with col3:
-            st.markdown("**AI Rating**")
-            color = get_quality_color(eval_data['rating'])
+        try:
+            st.image(current_eval['original'], width=120)
+        except:
             st.markdown(f"""
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.125rem; font-weight: 600;">{eval_data['rating']}/5</span>
+            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+                 display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                <div style="text-align: center; color: #6b7280;">
+                    <div>🖼️</div>
+                    <small>Original {eval_id}</small>
+                </div>
             </div>
             """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("**Processed**")
+        if st.button(f"🔍", key=f"proc_{eval_id}", help="Click to magnify image"):
+            st.session_state[f'show_modal_{eval_id}_proc'] = True
         
-        with col4:
-            st.markdown("**Quality Level**")
-            st.markdown(f"<span style='font-weight: 500; color: #374151;'>{eval_data['quality']}</span>", unsafe_allow_html=True)
+        try:
+            st.image(current_eval['processed'], width=120)
+        except:
+            st.markdown(f"""
+            <div style="width: 120px; height: 80px; background: #f3f4f6; border: 2px dashed #d1d5db; 
+                 display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                <div style="text-align: center; color: #6b7280;">
+                    <div>🖼️</div>
+                    <small>Processed {eval_id}</small>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("**AI Rating**")
+        st.markdown(f"""
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.125rem; font-weight: 600;">{current_eval['rating']}/5</span>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("**Quality Level**")
+        st.markdown(f"<span style='font-weight: 500; color: #374151;'>{current_eval['quality']}</span>", unsafe_allow_html=True)
+    
+    with col5:
+        st.markdown("**Annotator Feedback**")
+        col_up, col_down = st.columns(2)
         
-        with col5:
-            st.markdown("**Annotator Feedback**")
-            col_up, col_down = st.columns(2)
-            
-            with col_up:
-                thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
-                if st.button("👍", key=f"up_{eval_id}", 
-                           type="primary" if thumbs_up_pressed else "secondary",
-                           help="Agree with AI rating"):
-                    st.session_state.human_feedback[eval_id] = True
-                    if eval_id in st.session_state.annotator_ratings:
-                        del st.session_state.annotator_ratings[eval_id]
-                    st.rerun()
-            
-            with col_down:
-                thumbs_down_pressed = st.session_state.human_feedback.get(eval_id) is False
-                if st.button("👎", key=f"down_{eval_id}",
-                           type="primary" if thumbs_down_pressed else "secondary",
-                           help="Disagree with AI rating"):
-                    st.session_state.human_feedback[eval_id] = False
-                    st.rerun()
+        with col_up:
+            thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
+            if st.button("👍", key=f"up_{eval_id}", 
+                       type="primary" if thumbs_up_pressed else "secondary",
+                       help="Agree with AI rating"):
+                st.session_state.human_feedback[eval_id] = True
+                if eval_id in st.session_state.annotator_ratings:
+                    del st.session_state.annotator_ratings[eval_id]
+                st.rerun()
         
-        with col6:
-            st.markdown("**Annotator Rating**")
-            if st.session_state.human_feedback.get(eval_id) is False:
-                rating = st.selectbox(
-                    "Rate*", 
-                    options=[None, 1, 2, 3, 4, 5],
-                    format_func=lambda x: "Rate*" if x is None else str(x),
-                    key=f"rating_{eval_id}",
-                    index=0 if eval_id not in st.session_state.annotator_ratings else st.session_state.annotator_ratings[eval_id]
-                )
-                if rating is not None:
-                    st.session_state.annotator_ratings[eval_id] = rating
-            elif st.session_state.human_feedback.get(eval_id) is True:
-                st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
-            else:
-                st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+        with col_down:
+            thumbs_down_pressed = st.session_state.human_feedback.get(eval_id) is False
+            if st.button("👎", key=f"down_{eval_id}",
+                       type="primary" if thumbs_down_pressed else "secondary",
+                       help="Disagree with AI rating"):
+                st.session_state.human_feedback[eval_id] = False
+                st.rerun()
+    
+    with col6:
+        st.markdown("**Annotator Rating**")
+        if st.session_state.human_feedback.get(eval_id) is False:
+            rating = st.selectbox(
+                "Rate*", 
+                options=[None, 1, 2, 3, 4, 5],
+                format_func=lambda x: "Rate*" if x is None else str(x),
+                key=f"rating_{eval_id}",
+                index=0 if eval_id not in st.session_state.annotator_ratings else st.session_state.annotator_ratings[eval_id]
+            )
+            if rating is not None:
+                st.session_state.annotator_ratings[eval_id] = rating
+        elif st.session_state.human_feedback.get(eval_id) is True:
+            st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
+        else:
+            st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
     
     # Show modals if triggered
-    for eval_data in st.session_state.evaluations:
-        eval_id = eval_data['id']
-        
-        # Check for original image modal
-        if st.session_state.get(f'show_modal_{eval_id}_orig', False):
-            with st.container():
-                st.markdown("### 🔍 Magnified View - Original Image")
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    try:
-                        st.image(eval_data['original'], use_container_width=True, caption=f"Original Image {eval_id}")
-                    except:
-                        st.error(f"Could not load image: {eval_data['original']}")
-                    
-                    if st.button("Close", key=f"close_orig_{eval_id}"):
-                        st.session_state[f'show_modal_{eval_id}_orig'] = False
-                        st.rerun()
-        
-        # Check for processed image modal  
-        if st.session_state.get(f'show_modal_{eval_id}_proc', False):
-            with st.container():
-                st.markdown("### 🔍 Magnified View - Processed Image")
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    try:
-                        st.image(eval_data['processed'], use_container_width=True, caption=f"Processed Image {eval_id} - {eval_data['quality']}")
-                    except:
-                        st.error(f"Could not load image: {eval_data['processed']}")
-                    
-                    if st.button("Close", key=f"close_proc_{eval_id}"):
-                        st.session_state[f'show_modal_{eval_id}_proc'] = False
-                        st.rerun()
+    if st.session_state.get(f'show_modal_{eval_id}_orig', False):
+        with st.container():
+            st.markdown("### 🔍 Magnified View - Original Image")
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                try:
+                    st.image(current_eval['original'], use_container_width=True, caption=f"Original Image {eval_id}")
+                except:
+                    st.error(f"Could not load image: {current_eval['original']}")
+                
+                if st.button("Close", key=f"close_orig_{eval_id}"):
+                    st.session_state[f'show_modal_{eval_id}_orig'] = False
+                    st.rerun()
     
-    # Submit button
-    if st.session_state.human_feedback:
-        thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
-        missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
-        can_submit = len(missing_ratings) == 0
-        
-        if missing_ratings:
-            st.error(f"Please provide annotator ratings for all thumbs down items ({len(missing_ratings)} missing)")
-        
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button(
-                f"Submit Responses ({len(st.session_state.human_feedback)} validated)",
-                type="primary",
-                disabled=not can_submit,
-                use_container_width=True
-            ):
+    if st.session_state.get(f'show_modal_{eval_id}_proc', False):
+        with st.container():
+            st.markdown("### 🔍 Magnified View - Processed Image")
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                try:
+                    st.image(current_eval['processed'], use_container_width=True, caption=f"Processed Image {eval_id} - {current_eval['quality']}")
+                except:
+                    st.error(f"Could not load image: {current_eval['processed']}")
+                
+                if st.button("Close", key=f"close_proc_{eval_id}"):
+                    st.session_state[f'show_modal_{eval_id}_proc'] = False
+                    st.rerun()
+    
+    # Bottom navigation
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col1:
+        if st.button("← Previous", disabled=st.session_state.current_image_index == 0, use_container_width=True):
+            previous_image()
+    
+    with col2:
+        # Progress bar
+        progress = current_position / total_images
+        st.progress(progress, text=f"Progress: {current_position}/{total_images}")
+    
+    with col3:
+        if current_position < total_images:
+            if st.button("Next →", use_container_width=True):
+                next_image()
+        else:
+            # Submit button on last image
+            thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
+            missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
+            can_submit = len(missing_ratings) == 0 and len(st.session_state.human_feedback) > 0
+            
+            if st.button("Submit", type="primary", disabled=not can_submit, use_container_width=True):
                 submit_responses()
