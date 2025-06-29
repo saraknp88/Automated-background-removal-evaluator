@@ -622,7 +622,7 @@ else:
             
             submit_help = "All images must have feedback before submitting" if not can_submit else "Submit all responses"
             
-            if st.button("Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
+            if st.button("✨ Submit", type="primary", disabled=not can_submit, help=submit_help, use_container_width=True):
                 submit_responses()
     
     # Show feedback requirement message if no feedback provided
