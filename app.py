@@ -162,58 +162,53 @@ if 'show_thank_you' not in st.session_state:
     st.session_state.show_thank_you = False
 if 'show_analysis' not in st.session_state:
     st.session_state.show_analysis = False
-if 'is_evaluating' not in st.session_state:
-    st.session_state.is_evaluating = False
 
-# Demo data
+# Demo data - automatically loaded on first run
 DEMO_RESULTS = [
     {
         'id': 1, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%200.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%200.png',
+        'original': 'Before 0.jpg',
+        'processed': 'After 0.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 2, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2001.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2001.png',
+        'original': 'Before 01.jpg',
+        'processed': 'After 01.png',
         'rating': 3, 
         'quality': 'Moderately Functional'
     },
     {
         'id': 3, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2002.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2002.png',
+        'original': 'Before 02.jpg',
+        'processed': 'After 02.png',
         'rating': 4, 
         'quality': 'Near Production Ready'
     },
     {
         'id': 4, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2003.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2003.png',
+        'original': 'Before 03.jpg',
+        'processed': 'After 03.png',
         'rating': 5, 
         'quality': 'Production Ready'
     },
     {
         'id': 5, 
-        'original': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/Before%2004.jpg',
-        'processed': 'https://raw.githubusercontent.com/yourusername/yourrepo/main/After%2004.png',
+        'original': 'Before 04.jpg',
+        'processed': 'After 04.png',
         'rating': 2, 
         'quality': 'Partially Viable'
     }
 ]
 
+# Auto-load demo data on first run
+if not st.session_state.evaluations:
+    st.session_state.evaluations = DEMO_RESULTS
+
 def get_quality_color(rating: int) -> str:
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
-
-def handle_evaluate():
-    st.session_state.is_evaluating = True
-    time.sleep(2)  # Simulate processing
-    st.session_state.evaluations = DEMO_RESULTS
-    st.session_state.is_evaluating = False
-    st.rerun()
 
 def submit_responses():
     feedback_count = len(st.session_state.human_feedback)
@@ -234,13 +229,12 @@ def submit_responses():
     st.rerun()
 
 def start_new_evaluation():
-    st.session_state.evaluations = []
+    st.session_state.evaluations = DEMO_RESULTS
     st.session_state.human_feedback = {}
     st.session_state.annotator_ratings = {}
     st.session_state.analysis_results = None
     st.session_state.show_thank_you = False
     st.session_state.show_analysis = False
-    st.session_state.is_evaluating = False
     st.rerun()
 
 # Analysis Results Page
@@ -380,7 +374,7 @@ elif st.session_state.show_thank_you:
                 start_new_evaluation()
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Main Application
+# Main Application - Validate AI Ratings (Landing Page)
 else:
     # Header
     st.markdown("""
@@ -393,157 +387,100 @@ else:
     </div>
     """, unsafe_allow_html=True)
     
-    # Evaluation Rubric
-    st.markdown("""
-    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #3b82f6; margin-bottom: 2rem;">
-        <h3 style="color: #1f2937; margin-bottom: 1rem;">Evaluation Rubric</h3>
-        <p style="color: #374151; margin-bottom: 1rem;">We followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings:</p>
-        
-        <div style="margin-left: 1rem;">
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>2 - Ideation Stage:</strong> Useful as a concept or direction, but not for final use. Significant fixes are required to correct anatomy, object details, aberrations, etc.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>3 - Production Acceleration:</strong> Largely usable, with moderate fixes needed to improve details. More efficient than starting from scratch.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>4 - Near Production Ready:</strong> Only minor adjustments needed, such as light cleanup or retouching.</p>
-            <p style="margin: 0.5rem 0; color: #374151;"><strong>5 - Production Ready:</strong> No further edits needed. Ready for immediate use.</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # Validation interface
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.markdown("## Validate AI Ratings")
+    with col2:
+        if st.button("🔄 Reset", use_container_width=True):
+            start_new_evaluation()
     
-    # Show demo results before evaluation
-    if not st.session_state.evaluations and not st.session_state.is_evaluating:
-        st.markdown("## Image Pairs to be Evaluated")
+    # Create evaluation table
+    for eval_data in st.session_state.evaluations:
+        eval_id = eval_data['id']
         
-        for i, pair in enumerate(DEMO_RESULTS):
-            st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-            col1, col2, col3, col4 = st.columns([2, 1, 2, 3])
-            
-            with col1:
-                st.markdown("**Original**")
-                st.image(pair['original'], width=200)
-            
-            with col2:
-                st.markdown("<div style='text-align: center; padding-top: 50px; font-size: 2rem; color: #6b7280;'>→</div>", unsafe_allow_html=True)
-            
-            with col3:
-                st.markdown("**Processed**")
-                st.image(pair['processed'], width=200)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
         
-        # Evaluate button
+        col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
+        
+        with col1:
+            st.markdown("**Original**")
+            st.image(eval_data['original'], width=120)
+        
+        with col2:
+            st.markdown("**Processed**")
+            st.image(eval_data['processed'], width=120)
+        
+        with col3:
+            st.markdown("**AI Rating**")
+            color = get_quality_color(eval_data['rating'])
+            st.markdown(f"""
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="quality-badge" style="background-color: {color};">{eval_data['rating']}</div>
+                <span style="font-size: 1.125rem; font-weight: 600;">{eval_data['rating']}/5</span>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown("**Quality Level**")
+            st.markdown(f"<span style='font-weight: 500; color: #374151;'>{eval_data['quality']}</span>", unsafe_allow_html=True)
+        
+        with col5:
+            st.markdown("**Annotator Feedback**")
+            col_up, col_down = st.columns(2)
+            
+            with col_up:
+                thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
+                if st.button("👍", key=f"up_{eval_id}", 
+                           type="primary" if thumbs_up_pressed else "secondary",
+                           help="Agree with AI rating"):
+                    st.session_state.human_feedback[eval_id] = True
+                    if eval_id in st.session_state.annotator_ratings:
+                        del st.session_state.annotator_ratings[eval_id]
+                    st.rerun()
+            
+            with col_down:
+                thumbs_down_pressed = st.session_state.human_feedback.get(eval_id) is False
+                if st.button("👎", key=f"down_{eval_id}",
+                           type="primary" if thumbs_down_pressed else "secondary",
+                           help="Disagree with AI rating"):
+                    st.session_state.human_feedback[eval_id] = False
+                    st.rerun()
+        
+        with col6:
+            st.markdown("**Annotator Rating**")
+            if st.session_state.human_feedback.get(eval_id) is False:
+                rating = st.selectbox(
+                    "Rate*", 
+                    options=[None, 1, 2, 3, 4, 5],
+                    format_func=lambda x: "Rate*" if x is None else str(x),
+                    key=f"rating_{eval_id}",
+                    index=0 if eval_id not in st.session_state.annotator_ratings else st.session_state.annotator_ratings[eval_id]
+                )
+                if rating is not None:
+                    st.session_state.annotator_ratings[eval_id] = rating
+            elif st.session_state.human_feedback.get(eval_id) is True:
+                st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
+            else:
+                st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Submit button
+    if st.session_state.human_feedback:
+        thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
+        missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
+        can_submit = len(missing_ratings) == 0
+        
+        if missing_ratings:
+            st.error(f"Please provide annotator ratings for all thumbs down items ({len(missing_ratings)} missing)")
+        
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🧠 Start AI Evaluation (5 demo pairs)", type="primary", use_container_width=True):
-                handle_evaluate()
-    
-    # Loading state
-    if st.session_state.is_evaluating:
-        st.markdown("""
-        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 2rem; text-align: center; margin: 1.5rem 0;">
-            <div style="margin-bottom: 1rem;">⏳</div>
-            <h3 style="color: #1d4ed8;">AI is analyzing image pairs...</h3>
-        </div>
-        """, unsafe_allow_html=True)
-        time.sleep(2)
-        st.session_state.evaluations = DEMO_RESULTS
-        st.session_state.is_evaluating = False
-        st.rerun()
-    
-    # Evaluation results
-    if st.session_state.evaluations:
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.markdown("## Validate AI Ratings")
-        with col2:
-            if st.button("🔄 Reset", use_container_width=True):
-                start_new_evaluation()
-        
-        # Create evaluation table
-        for eval_data in st.session_state.evaluations:
-            eval_id = eval_data['id']
-            
-            st.markdown('<div class="evaluation-card">', unsafe_allow_html=True)
-            
-            col1, col2, col3, col4, col5, col6 = st.columns([2, 2, 1.5, 2, 2, 2])
-            
-            with col1:
-                st.markdown("**Original**")
-                st.image(eval_data['original'], width=120)
-            
-            with col2:
-                st.markdown("**Processed**")
-                st.image(eval_data['processed'], width=120)
-            
-            with col3:
-                st.markdown("**AI Rating**")
-                color = get_quality_color(eval_data['rating'])
-                st.markdown(f"""
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <div class="quality-badge" style="background-color: {color};">{eval_data['rating']}</div>
-                    <span style="font-size: 1.125rem; font-weight: 600;">{eval_data['rating']}/5</span>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col4:
-                st.markdown("**Quality Level**")
-                st.markdown(f"<span style='font-weight: 500; color: #374151;'>{eval_data['quality']}</span>", unsafe_allow_html=True)
-            
-            with col5:
-                st.markdown("**Annotator Feedback**")
-                col_up, col_down = st.columns(2)
-                
-                with col_up:
-                    thumbs_up_pressed = st.session_state.human_feedback.get(eval_id) is True
-                    if st.button("👍", key=f"up_{eval_id}", 
-                               type="primary" if thumbs_up_pressed else "secondary",
-                               help="Agree with AI rating"):
-                        st.session_state.human_feedback[eval_id] = True
-                        if eval_id in st.session_state.annotator_ratings:
-                            del st.session_state.annotator_ratings[eval_id]
-                        st.rerun()
-                
-                with col_down:
-                    thumbs_down_pressed = st.session_state.human_feedback.get(eval_id) is False
-                    if st.button("👎", key=f"down_{eval_id}",
-                               type="primary" if thumbs_down_pressed else "secondary",
-                               help="Disagree with AI rating"):
-                        st.session_state.human_feedback[eval_id] = False
-                        st.rerun()
-            
-            with col6:
-                st.markdown("**Annotator Rating**")
-                if st.session_state.human_feedback.get(eval_id) is False:
-                    rating = st.selectbox(
-                        "Rate*", 
-                        options=[None, 1, 2, 3, 4, 5],
-                        format_func=lambda x: "Rate*" if x is None else str(x),
-                        key=f"rating_{eval_id}",
-                        index=0 if eval_id not in st.session_state.annotator_ratings else st.session_state.annotator_ratings[eval_id]
-                    )
-                    if rating is not None:
-                        st.session_state.annotator_ratings[eval_id] = rating
-                elif st.session_state.human_feedback.get(eval_id) is True:
-                    st.markdown("<span style='color: #059669; font-weight: 500;'>Agreed</span>", unsafe_allow_html=True)
-                else:
-                    st.markdown("<span style='color: #6b7280;'>-</span>", unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Submit button
-        if st.session_state.human_feedback:
-            thumbs_down_items = [eval_id for eval_id, feedback in st.session_state.human_feedback.items() if not feedback]
-            missing_ratings = [eval_id for eval_id in thumbs_down_items if eval_id not in st.session_state.annotator_ratings]
-            can_submit = len(missing_ratings) == 0
-            
-            if missing_ratings:
-                st.error(f"Please provide annotator ratings for all thumbs down items ({len(missing_ratings)} missing)")
-            
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                if st.button(
-                    f"Submit Responses ({len(st.session_state.human_feedback)} validated)",
-                    type="primary",
-                    disabled=not can_submit,
-                    use_container_width=True
-                ):
-                    submit_responses()
+            if st.button(
+                f"Submit Responses ({len(st.session_state.human_feedback)} validated)",
+                type="primary",
+                disabled=not can_submit,
+                use_container_width=True
+            ):
+                submit_responses()
