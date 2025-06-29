@@ -463,11 +463,18 @@ def get_quality_color(rating: int) -> str:
     colors = {1: '#dc2626', 2: '#ea580c', 3: '#ca8a04', 4: '#2563eb', 5: '#16a34a'}
     return colors.get(rating, '#6b7280')
 
-def create_magnifiable_image(image_path: str, caption: str, width: int = 120) -> str:
-    """Create HTML for a magnifiable image with click-to-enlarge functionality"""
+def create_clickable_image_placeholder(image_path: str, caption: str, eval_id: int, image_type: str) -> str:
+    """Create a clickable image placeholder that opens modal when clicked"""
     return f"""
     <div class="image-container clickable-image" onclick="openImageModal('{image_path}', '{caption}')">
-        <img src="{image_path}" alt="{caption}" class="magnify-image" style="width: {width}px;">
+        <div class="magnify-image" style="width: 120px; height: 80px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); 
+             border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; 
+             border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+            <div style="text-align: center; color: #6b7280;">
+                <div style="font-size: 24px; margin-bottom: 4px;">🖼️</div>
+                <div style="font-size: 10px; font-weight: 500;">{image_type} {eval_id}</div>
+            </div>
+        </div>
     </div>
     """
 
@@ -671,19 +678,29 @@ else:
         
         with col1:
             st.markdown("**Original**")
-            # Use expandable image viewer
-            with st.expander("🔍 View Full Size", expanded=False):
-                st.image(eval_data['original'], caption=f"Original Image {eval_id}", use_container_width=True)
-            # Small preview
-            st.image(eval_data['original'], width=120)
+            # Create clickable image placeholder
+            st.markdown(
+                create_clickable_image_placeholder(
+                    eval_data['original'], 
+                    f"Original Image {eval_id}",
+                    eval_id,
+                    "Original"
+                ), 
+                unsafe_allow_html=True
+            )
         
         with col2:
             st.markdown("**Processed**")
-            # Use expandable image viewer
-            with st.expander("🔍 View Full Size", expanded=False):
-                st.image(eval_data['processed'], caption=f"Processed Image {eval_id} - {eval_data['quality']}", use_container_width=True)
-            # Small preview
-            st.image(eval_data['processed'], width=120)
+            # Create clickable image placeholder  
+            st.markdown(
+                create_clickable_image_placeholder(
+                    eval_data['processed'], 
+                    f"Processed Image {eval_id} - {eval_data['quality']}",
+                    eval_id,
+                    "Processed"
+                ), 
+                unsafe_allow_html=True
+            )
         
         with col3:
             st.markdown("**AI Rating**")
