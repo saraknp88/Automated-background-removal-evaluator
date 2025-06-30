@@ -439,12 +439,12 @@ elif st.session_state.show_thank_you:
 # Main Application - Single Image View
 else:
     # Header
-    st.markdown('<h1 class="instructions-title">Sara\'s AI Judge for Background Removal</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="instructions-title">Hybrid Background Removal Evaluator App</h1>', unsafe_allow_html=True)
     
     # Instructions
     st.markdown("""
     <div class="instructions-box">
-        <strong>Hi, I'm Sara's AI Judge for Background Removal. I followed the evaluation rubric below for evaluating the quality of background removed outputs. Follow the same rubric as you validate AI provided ratings for background removed images.</strong><br><br>
+        <strong> The AI-generated ratings below are based on the evaluation rubric provided for assessing the quality of background removal outputs. Please use the same rubric when reviewing and validating the AI’s ratings for the background-removed images.</strong><br><br>
         <strong>💡 Tip:</strong> Click the 🔍 button next to each image to view it in full size for detailed inspection.<br><br>
         <strong>1 - Unusable:</strong> Major issues with structure, style, identity, or overall quality. Not suitable for use.<br>
         <strong>2 - Partially Viable:</strong> Useful as a concept or direction, but not for final use. Significant fixes required.<br>
