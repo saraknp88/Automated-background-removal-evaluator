@@ -22,6 +22,7 @@ Hybrid Background Removal Evaluator App is a Streamlit web application designed 
 - **5 - Production Ready**: No further edits needed. Ready for immediate use.
   
 ### ✨ Features
+- **AI Generated Ratings** 
 - **Professional Assessment**: Provide thumbs up/down feedback on AI generated ratings. If thumbs down is selected, Annotator must provide their rating using the 1-5 rubric criteria above. 
 - **Interactive Interface**: Side-by-side comparison views and ability to magnify images. 
 - **Comprehensive Analytics**: Detailed evaluation dashboard and statistics
