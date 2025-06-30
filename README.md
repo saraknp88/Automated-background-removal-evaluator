@@ -1,4 +1,8 @@
 # ⚖️ Hybrid Background Removal Evaluator App
+
+<p align="center">
+  <img src="logo.png" alt="Logo" width="200"/>
+</p>
   
   **Background Removal Quality Assessment Tool**
   
