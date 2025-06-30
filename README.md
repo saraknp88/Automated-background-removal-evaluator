@@ -1,84 +1,33 @@
-Sara's Automated Background Removal Evaluator
-A Streamlit web application for validating AI-generated background removal ratings, combining automated evaluation with human-in-the-loop feedback. The tool enables human annotators to review the AI's quality assessments and provide thumbs-up/down responses along with alternative rating suggestions.
-Sara's AI Evaluation Validator
-Features
+# ⚖️ Hybrid Background Removal Evaluator App
+  
+  **Background Removal Quality Assessment Tool**
+  
+  [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]([https://background-removal-evaluator-8qmjiykauk7sjauwsnjskj.streamlit.app/](https://automated-background-removal-evaluator-hylbzpyy436nvoauj2akcg.streamlit.app/#ready-to-begin))
+</div>
 
-AI Evaluation Simulation: Demonstrates automated background removal quality assessment
-Human Validation Interface: Thumbs up/down feedback system for AI ratings
-Annotator Rating System: Alternative rating input when disagreeing with AI assessments
-Analysis Dashboard: Comprehensive analysis of agreement rates and validation metrics
-Interactive Results: Visual feedback with celebration animations and detailed reporting
+## 💬 About
 
-Demo Data
-The application includes sample image pairs representing:
+Hybrid Background Removal Evaluator App is a Streamlit web application designed to validate AI-generated background removal scores for images through human-in-the-loop review. It combines automated quality assessment with manual oversight to ensure production-level readiness. Annotators are presented with side-by-side views of original and processed images, along with the AI’s rating based on a consistent 5-point rubric. They can agree with the score via a simple thumbs-up or flag a disagreement by thumbs down and submitting an alternative score. The tool also includes magnifying functionality for closer inspection, making it easier to spot edge artifacts or incomplete extractions. All interactions follow the same rubric used by the AI, ensuring consistency across evaluations. An analysis dashboard provides executive summary, insights into agreement rates, and actionable recommendations, helping teams make informed go/no-go decisions for deployment.
 
-Florist portraits
-Business professional photos
-Product photography (iPhone)
-Food photography (steak meals)
-Action shots (bowl splash)
 
-Installation
+### ⚖️ Rating Scale
+- **1 - Unusable**: Major issues with structure, style, identity, or overall quality. Not suitable for use.
+- **2 - Partially Viable**: Useful as a concept or direction, but not for final use. Significant fixes required.
+- **3 - Moderately Functional**: Largely usable, with moderate fixes needed. More efficient than starting from scratch.
+- **4 - Near Production Ready**: Only minor adjustments needed, such as light cleanup or retouching.
+- **5 - Production Ready**: No further edits needed. Ready for immediate use.
+  
+### ✨ Features
+- **Professional Assessment**: Provide thumbs up/down feedback on AI generated ratings. If thumbs down is selected, Annotator must provide their rating using the 1-5 rubric criteria above. 
+- **Interactive Interface**: Side-by-side comparison views and ability to magnify images. 
+- **Comprehensive Analytics**: Detailed evaluation dashboard and statistics
+- **Mobile Friendly**: Works seamlessly across all devices
 
-Clone the repository:
+## 🔗 Quick Start
 
-bashgit clone https://github.com/yourusername/sara-ai-evaluation-validator.git
-cd sara-ai-evaluation-validator
+1. **[Open the App]([your-streamlit-app-url-here] [https://background-removal-evaluator-8qmjiykauk7sjauwsnjskj.streamlit.app/](https://automated-background-removal-evaluator-hylbzpyy436nvoauj2akcg.streamlit.app/#ready-to-begin))**
+2. **Review the criteria** 
+3. **Evaluate images** using the 5-point scale
+4. **View analysis** when complete
 
-Install required dependencies:
-
-bashpip install -r requirements.txt
-
-Run the Streamlit app:
-
-bashstreamlit run app.py
-Usage
-
-Start Evaluation: Click "Start AI Evaluation" to simulate AI processing of image pairs
-Validate Ratings: Review each AI rating and provide thumbs up (agree) or thumbs down (disagree) feedback
-Provide Alternative Ratings: For disagreements, select your preferred rating (1-5 scale)
-Submit Responses: Complete the validation process once all feedback is provided
-View Analysis: Review comprehensive analysis of agreement rates and recommendations
-
-Quality Rating Scale
-
-1 - Not Viable: Poor quality, major artifacts
-2 - Partially Viable: Some issues, needs improvement
-3 - Moderately Functional: Acceptable with minor issues
-4 - Near Production Ready: High quality, minimal issues
-5 - Production Ready: Excellent quality, ready for use
-
-Analysis Metrics
-The application provides detailed analysis including:
-
-Agreement rate between AI and human evaluators
-Disagreement patterns and trends
-Recommendations for algorithm improvements
-Quality distribution analysis
-Feedback for reinforcement learning systems
-
-Technology Stack
-
-Frontend: Streamlit
-Backend: Python
-Data Handling: Pandas, NumPy
-Visualization: Plotly, Streamlit charts
-UI Components: Streamlit native components
-
-Contributing
-
-Fork the repository
-Create a feature branch (git checkout -b feature/amazing-feature)
-Commit your changes (git commit -m 'Add some amazing feature')
-Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
-
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
-Contact
-For questions or support, please open an issue on GitHub or contact the development team.
-Acknowledgments
-
-Built for AI model validation and human-in-the-loop evaluation workflows
-Designed to support machine learning model improvement through human feedback
-Optimized for background removal quality assessment tasks
+---
