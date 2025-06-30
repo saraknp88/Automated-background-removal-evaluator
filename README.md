@@ -30,7 +30,7 @@ Hybrid Background Removal Evaluator App is a Streamlit web application designed 
 
 ## 🔗 Quick Start
 
-1. **[Open the App]([your-streamlit-app-url-here] [https://background-removal-evaluator-8qmjiykauk7sjauwsnjskj.streamlit.app/](https://automated-background-removal-evaluator-hylbzpyy436nvoauj2akcg.streamlit.app/#ready-to-begin))**
+1. **Open the App**:https://automated-background-removal-evaluator-hylbzpyy436nvoauj2akcg.streamlit.app/#ready-to-begin
 2. **Review the criteria** 
 3. **Evaluate images** using the 5-point scale
 4. **View analysis** when complete
