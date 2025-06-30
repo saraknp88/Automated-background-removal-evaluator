@@ -4,7 +4,7 @@ from typing import Dict, Any
 
 # Page config
 st.set_page_config(
-    page_title="Sara's AI Evaluation Validator",
+    page_title="Hybrid Background Removal Evaluator App",
     page_icon="✨",
     layout="wide"
 )
