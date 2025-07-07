@@ -190,7 +190,7 @@ DEMO_RESULTS = [
         'processed': 'After 0.png',
         'rating': 4, 
         'quality': 'Near Production Ready',
-        'description': 'Business Attire'
+        'description': 'Professional Portrait'
     },
     {
         'id': 2, 
@@ -198,7 +198,7 @@ DEMO_RESULTS = [
         'processed': 'After 01.png',
         'rating': 3, 
         'quality': 'Moderately Functional',
-        'description': 'Professional Portrait'
+        'description': 'Business Attire'
     },
     {
         'id': 3, 
@@ -206,7 +206,7 @@ DEMO_RESULTS = [
         'processed': 'After 02.png',
         'rating': 4, 
         'quality': 'Near Production Ready',
-        'description': 'Casual Headshot'
+        'description': 'Product - Smartphone'
     },
     {
         'id': 4, 
@@ -214,7 +214,7 @@ DEMO_RESULTS = [
         'processed': 'After 03.png',
         'rating': 5, 
         'quality': 'Production Ready',
-        'description': 'Studio Portrait'
+        'description': 'Steak Dish'
     },
     {
         'id': 5, 
@@ -222,7 +222,7 @@ DEMO_RESULTS = [
         'processed': 'After 04.png',
         'rating': 2, 
         'quality': 'Partially Viable',
-        'description': 'Group Photo'
+        'description': 'Product - Coffee Cup'
     }
 ]
 
