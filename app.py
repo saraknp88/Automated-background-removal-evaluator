@@ -277,7 +277,7 @@ def previous_image():
 # Analysis Results Page
 if st.session_state.show_analysis and st.session_state.analysis_results:
     # Header with consistent styling
-    st.markdown('<h1 class="main-header">Human-AI Validation Analysis</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Evaluation Dashboard</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-header">Performance evaluation dashboard</p>', unsafe_allow_html=True)
     
     results = st.session_state.analysis_results
